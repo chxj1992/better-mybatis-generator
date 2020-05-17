@@ -8,6 +8,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 /**
  * 配置持久化
+ * @author chenxiaojing
  */
 @State(name = "PersistentConfig", storages = {@Storage("generator-config.xml")})
 public class PersistentConfig implements PersistentStateComponent<PersistentConfig> {
@@ -28,13 +30,14 @@ public class PersistentConfig implements PersistentStateComponent<PersistentConf
         return ServiceManager.getService(project, PersistentConfig.class);
     }
 
+    @Override
     @Nullable
     public PersistentConfig getState() {
         return this;
     }
 
     @Override
-    public void loadState(PersistentConfig persistentConfig) {
+    public void loadState(@NotNull PersistentConfig persistentConfig) {
         XmlSerializerUtil.copyBean(persistentConfig, this);
     }
 

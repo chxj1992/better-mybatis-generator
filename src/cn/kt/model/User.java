@@ -2,11 +2,15 @@ package cn.kt.model;
 
 /**
  * 保存数据库连接对应的用户名，密码存在keepass库中
- * Created by kangtian on 2018/8/3.
+ *
+ * @author kangtian
+ * @date 2018/8/3
  */
 public class User {
 
-    //用户名
+    /**
+     * 用户名
+     */
     private String username;
 
 
@@ -18,8 +22,6 @@ public class User {
 
     }
 
-
-
     public String getUsername() {
         return username;
     }
@@ -27,6 +29,5 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-
 
 }

@@ -1,5 +1,11 @@
 package cn.kt.model;
 
+import cn.kt.constant.ExtendFeatureEnum;
+
+import javax.swing.*;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 界面配置
  */
@@ -28,12 +34,12 @@ public class Config {
 	/**
 	 * dao名称
 	 */
-	private String daoName;
+	private String mapperName;
 
 	/**
 	 * dao后缀
 	 */
-	private String daoPostfix;
+	private String mapperPostfix;
 
 	/**
 	 * 工程目录
@@ -42,110 +48,39 @@ public class Config {
 
 	private String modelPackage;
 	private String modelTargetFolder;
-	private String modelMvnPath;
+	private String modelPath;
 
-	private String daoPackage;
-	private String daoTargetFolder;
-	private String daoMvnPath;
+	private String mapperPackage;
+	private String mapperTargetFolder;
+	private String mapperPath;
 
 	private String xmlPackage;
 	private String xmlTargetFolder;
-	private String xmlMvnPath;
-
-	/**
-	 * 是否分页
-	 */
-	private boolean offsetLimit;
-
-	/**
-	 * 是否生成实体注释（来自表）
-	 */
-	private boolean comment;
-
-	/**
-	 * 是否覆盖原xml
-	 */
-	private boolean overrideXML;
-
-	/**
-	 * 是否生成toString/hashCode/equals方法
-	 */
-	private boolean needToStringHashcodeEquals;
-
-	/**
-	 * 是否使用Schema前缀
-	 */
-	private boolean useSchemaPrefix;
-
-	/**
-	 * 是否select 增加ForUpdate
-	 */
-	private boolean needForUpdate;
-
-	/**
-	 * 是否DAO使用 @Repository 注解
-	 */
-	private boolean annotationDAO;
-
-	/**
-	 * 是否DAO方法抽出到公共父接口
-	 */
-	private boolean useDAOExtendStyle;
-
-	/**
-	 * 是否JSR310: Date and Time API
-	 */
-	private boolean jsr310Support;
-
-	/**
-	 * 是否生成JPA注解
-	 */
-	private boolean annotation;
-
-	/**
-	 * 是否使用实际的列名
-	 */
-	private boolean useActualColumnNames;
-
-	/**
-	 * 是否启用as别名查询
-	 */
-	private boolean useTableNameAlias;
-
-	/**
-	 * 是否使用Example
-	 */
-	private boolean useExample;
-	/**
-	 * 是否是mysql8数据库
-	 */
-	private boolean mysql_8;
+	private String xmlPath;
 
 	private String encoding;
 	private String connectorJarPath;
 
-    public boolean isJsr310Support() {
-        return jsr310Support;
-    }
+	private Map<ExtendFeatureEnum, JCheckBox> featureMap = new HashMap<>();
 
-    public void setJsr310Support(boolean jsr310Support) {
-        this.jsr310Support = jsr310Support;
-    }
-
-    public boolean isUseSchemaPrefix() {
-        return useSchemaPrefix;
-    }
-
-    public void setUseSchemaPrefix(boolean useSchemaPrefix) {
-        this.useSchemaPrefix = useSchemaPrefix;
-    }
-
-	public boolean isUseExample() {
-		return useExample;
+	public JCheckBox fetchFeatureCheckBox(ExtendFeatureEnum featureEnum) {
+		JCheckBox jCheckBox;
+		if (featureMap.containsKey(featureEnum)) {
+			jCheckBox = featureMap.get(featureEnum);
+		} else {
+			jCheckBox = new JCheckBox(featureEnum.getDesc());
+			jCheckBox.setSelected(featureEnum.isDefaultChecked());
+			featureMap.put(featureEnum, jCheckBox);
+		}
+		return jCheckBox;
 	}
 
-	public void setUseExample(boolean useExample) {
-		this.useExample = useExample;
+	public Map<ExtendFeatureEnum, JCheckBox> getFeatureMap() {
+		return featureMap;
+	}
+
+	public void setFeatureMap(Map<ExtendFeatureEnum, JCheckBox> featureMap) {
+		this.featureMap = featureMap;
 	}
 
 	public String getName() {
@@ -204,20 +139,20 @@ public class Config {
 		this.modelTargetFolder = modelTargetFolder;
 	}
 
-	public String getDaoPackage() {
-		return daoPackage;
+	public String getMapperPackage() {
+		return mapperPackage;
 	}
 
-	public void setDaoPackage(String daoPackage) {
-		this.daoPackage = daoPackage;
+	public void setMapperPackage(String mapperPackage) {
+		this.mapperPackage = mapperPackage;
 	}
 
-	public String getDaoTargetFolder() {
-		return daoTargetFolder;
+	public String getMapperTargetFolder() {
+		return mapperTargetFolder;
 	}
 
-	public void setDaoTargetFolder(String daoTargetFolder) {
-		this.daoTargetFolder = daoTargetFolder;
+	public void setMapperTargetFolder(String mapperTargetFolder) {
+		this.mapperTargetFolder = mapperTargetFolder;
 	}
 
 	public String getXmlPackage() {
@@ -236,68 +171,13 @@ public class Config {
 		this.xmlTargetFolder = xmlTargetFolder;
 	}
 
-	public boolean isOffsetLimit() {
-		return offsetLimit;
+
+	public String getMapperName() {
+		return mapperName;
 	}
 
-	public void setOffsetLimit(boolean offsetLimit) {
-		this.offsetLimit = offsetLimit;
-	}
-
-	public boolean isComment() {
-		return comment;
-	}
-
-	public void setComment(boolean comment) {
-		this.comment = comment;
-	}
-
-    public boolean isNeedToStringHashcodeEquals() {
-        return needToStringHashcodeEquals;
-    }
-
-    public void setNeedToStringHashcodeEquals(boolean needToStringHashcodeEquals) {
-        this.needToStringHashcodeEquals = needToStringHashcodeEquals;
-    }
-
-	public boolean isNeedForUpdate() {
-		return needForUpdate;
-	}
-
-	public void setNeedForUpdate(boolean needForUpdate) {
-		this.needForUpdate = needForUpdate;
-	}
-
-	public boolean isAnnotationDAO() {
-		return annotationDAO;
-	}
-
-	public void setAnnotationDAO(boolean annotationDAO) {
-		this.annotationDAO = annotationDAO;
-	}
-
-	public boolean isAnnotation() {
-		return annotation;
-	}
-
-	public void setAnnotation(boolean annotation) {
-		this.annotation = annotation;
-	}
-
-	public boolean isUseActualColumnNames() {
-		return useActualColumnNames;
-	}
-
-	public void setUseActualColumnNames(boolean useActualColumnNames) {
-		this.useActualColumnNames = useActualColumnNames;
-	}
-
-	public String getDaoName() {
-		return daoName;
-	}
-
-	public void setDaoName(String daoName) {
-		this.daoName = daoName;
+	public void setMapperName(String mapperName) {
+		this.mapperName = mapperName;
 	}
 
 	public String getPrimaryKey() {
@@ -316,71 +196,36 @@ public class Config {
         this.encoding = encoding;
     }
 
-	public boolean getUseTableNameAlias() {
-		return useTableNameAlias;
+	public String getModelPath() {
+		return modelPath;
 	}
 
-	public void setUseTableNameAlias(boolean useTableNameAlias) {
-		this.useTableNameAlias = useTableNameAlias;
+	public void setModelPath(String modelPath) {
+		this.modelPath = modelPath;
 	}
 
-	public boolean isUseTableNameAlias() {
-		return useTableNameAlias;
+	public String getMapperPath() {
+		return mapperPath;
 	}
 
-	public boolean isOverrideXML() {
-		return overrideXML;
+	public void setMapperPath(String mapperPath) {
+		this.mapperPath = mapperPath;
 	}
 
-	public void setOverrideXML(boolean overrideXML) {
-		this.overrideXML = overrideXML;
+	public String getXmlPath() {
+		return xmlPath;
 	}
 
-	public void setUseDAOExtendStyle(boolean useDAOExtendStyle) {
-		this.useDAOExtendStyle = useDAOExtendStyle;
+	public void setXmlPath(String xmlPath) {
+		this.xmlPath = xmlPath;
 	}
 
-	public boolean isUseDAOExtendStyle() {
-		return useDAOExtendStyle;
+	public String getMapperPostfix() {
+		return mapperPostfix;
 	}
 
-	public String getModelMvnPath() {
-		return modelMvnPath;
+	public void setMapperPostfix(String mapperPostfix) {
+		this.mapperPostfix = mapperPostfix;
 	}
 
-	public void setModelMvnPath(String modelMvnPath) {
-		this.modelMvnPath = modelMvnPath;
-	}
-
-	public String getDaoMvnPath() {
-		return daoMvnPath;
-	}
-
-	public void setDaoMvnPath(String daoMvnPath) {
-		this.daoMvnPath = daoMvnPath;
-	}
-
-	public String getXmlMvnPath() {
-		return xmlMvnPath;
-	}
-
-	public void setXmlMvnPath(String xmlMvnPath) {
-		this.xmlMvnPath = xmlMvnPath;
-	}
-
-	public String getDaoPostfix() {
-		return daoPostfix;
-	}
-
-	public void setDaoPostfix(String daoPostfix) {
-		this.daoPostfix = daoPostfix;
-	}
-
-	public boolean isMysql_8() {
-		return mysql_8;
-	}
-
-	public void setMysql_8(boolean mysql_8) {
-		this.mysql_8 = mysql_8;
-	}
 }

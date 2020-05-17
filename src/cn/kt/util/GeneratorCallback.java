@@ -4,7 +4,9 @@ import org.mybatis.generator.api.ProgressCallback;
 
 /**
  * mybatis generator进度回调
- * Created by kangtian on 2018/7/17.
+ *
+ * @author kangtian
+ * @date 2018/7/17
  */
 public class GeneratorCallback implements ProgressCallback {
     @Override
@@ -28,6 +30,7 @@ public class GeneratorCallback implements ProgressCallback {
 
     @Override
     public void done() {
+        System.out.println("代码生成完毕!");
     }
 
     @Override

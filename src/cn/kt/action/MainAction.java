@@ -10,7 +10,9 @@ import com.intellij.psi.PsiElement;
 
 /**
  * mybatis generator工具生成类
- * Created by kangtian on 2018/7/17.
+ *
+ * @author kangtian
+ * @date 2018/7/17
  */
 public class MainAction extends AnAction {
 

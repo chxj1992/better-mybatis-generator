@@ -12,7 +12,9 @@ import javax.swing.*;
 
 /**
  *配置设置界面
- * Created by kangtian on 2018/7/18.
+ *
+ * @author kangtian
+ * @date 2018/7/18
  */
 public class SettingConfigurable implements SearchableConfigurable {
     private SettingUI mainPanel;

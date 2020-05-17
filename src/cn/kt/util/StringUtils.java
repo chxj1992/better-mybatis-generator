@@ -1,7 +1,9 @@
 package cn.kt.util;
 
 /**
- * Created by Owen on 6/18/16.
+ *
+ * @author Owen
+ * @date 6/18/16
  */
 public class StringUtils {
 

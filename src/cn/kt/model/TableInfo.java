@@ -10,18 +10,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author chenxiaojing
+ */
 public class TableInfo {
 
     public final DbTable tableElement;
 
-    private List<DasColumn> columns = new ArrayList<DasColumn>();
+    private List<DasColumn> columns;
 
-    private List<String> primaryKeys = new ArrayList<String>();
+    private List<String> primaryKeys = new ArrayList<>();
 
 
     public TableInfo(DbTable tableElement) {
         this.tableElement = tableElement;
-        List<DasColumn> columns = new ArrayList<DasColumn>();
+        List<DasColumn> columns = new ArrayList<>();
 
         JBIterable<? extends DasColumn> columnsIter = DasUtil.getColumns(tableElement);
         List<? extends DasColumn> dasColumns = columnsIter.toList();
@@ -46,7 +49,7 @@ public class TableInfo {
     }
 
     public List<String> getColumnsName() {
-        List<String> columnsName = new ArrayList();
+        List<String> columnsName = new ArrayList<>();
         for (DasColumn column : columns) {
             columnsName.add(column.getName());
         }
@@ -58,12 +61,12 @@ public class TableInfo {
     }
 
     public List<DasColumn> getNonPrimaryColumns() {
-        Set<String> pKNameSet = new HashSet<String>();
+        Set<String> pKNameSet = new HashSet<>();
         for (String pkName : getPrimaryKeys()) {
             pKNameSet.add(pkName);
         }
 
-        List<DasColumn> ret = new ArrayList<DasColumn>();
+        List<DasColumn> ret = new ArrayList<>();
         for (DasColumn column : columns) {
             if (!pKNameSet.contains(column.getName())) {
                 ret.add(column);

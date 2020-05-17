@@ -1,5 +1,6 @@
 package cn.kt.ui;
 
+import cn.kt.constant.ExtendFeatureEnum;
 import cn.kt.model.Config;
 import cn.kt.model.DbType;
 import cn.kt.model.User;
@@ -26,7 +27,9 @@ import java.util.Map;
 
 /**
  * 账号密码输入界面
- * Created by kangtian on 2018/8/3.
+ *
+ * @author kangtian
+ * @date 2018/8/3
  */
 public class UserUI extends JFrame {
 
@@ -37,8 +40,8 @@ public class UserUI extends JFrame {
     private JPanel contentPanel = new JBPanel<>();
     private JPanel btnPanel = new JBPanel<>();
     private JPanel filedPanel = new JBPanel<>();
-    private JButton buttonOK = new JButton("ok");
-    private JButton buttonCancel = new JButton("cancle");
+    private JButton buttonOK = new JButton("OK");
+    private JButton buttonCancel = new JButton("CANCEL");
 
     public JTextField usernameField = new JBTextField(20);
     public JTextField passwordField = new JBTextField(20);
@@ -50,7 +53,8 @@ public class UserUI extends JFrame {
         this.persistentConfig = PersistentConfig.getInstance(project);
         this.config = config;
         setTitle("set username and password");
-        setPreferredSize(new Dimension(400, 180));//设置大小
+        //设置大小
+        setPreferredSize(new Dimension(400, 180));
         setLocation(550, 350);
         pack();
         setVisible(true);
@@ -85,12 +89,14 @@ public class UserUI extends JFrame {
         contentPanel.add(btnPanel);
 
         buttonOK.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 onOK(driverClass, address, persistentConfig, project);
             }
         });
 
         buttonCancel.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }
@@ -102,6 +108,7 @@ public class UserUI extends JFrame {
             }
         });
         contentPanel.registerKeyboardAction(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }
@@ -110,39 +117,37 @@ public class UserUI extends JFrame {
 
     private void onOK(String driverClass, String address, PersistentConfig persistentConfig, Project project) {
         try {
-            String originAddress = address;
             Connection conn = null;
-            String DbTypeName = "";
-            Boolean isMySQL_8 = config.isMysql_8();
+            String dbTypeName = "";
             try {
                 if (driverClass.contains("oracle")) {
-                    DbTypeName = "oracle";
+                    dbTypeName = "oracle";
                     Class.forName(DbType.Oracle.getDriverClass());
                 } else if (driverClass.contains("mysql")) {
-                    DbTypeName = "mysql";
-                    if (!isMySQL_8) {
+                    dbTypeName = "mysql";
+                    if (!config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_MYSQL8).isSelected()) {
                         Class.forName(DbType.MySQL.getDriverClass());
                     } else {
                         Class.forName(DbType.MySQL_8.getDriverClass());
                     }
                 } else if (driverClass.contains("postgresql")) {
-                    DbTypeName = "postgresql";
+                    dbTypeName = "postgresql";
                     Class.forName(DbType.PostgreSQL.getDriverClass());
                 } else if (driverClass.contains("sqlserver")) {
-                    DbTypeName = "sqlserver";
+                    dbTypeName = "sqlserver";
                     Class.forName(DbType.SqlServer.getDriverClass());
                 } else if (driverClass.contains("sqlite")) {
-                    DbTypeName = "sqlite";
+                    dbTypeName = "sqlite";
                     Class.forName(DbType.Sqlite.getDriverClass());
                 } else if (driverClass.contains("mariadb")) {
-                    DbTypeName = "mariadb";
+                    dbTypeName = "mariadb";
                     Class.forName(DbType.MariaDB.getDriverClass());
                 }
 
                 conn = DriverManager.getConnection(address, usernameField.getText(), passwordField.getText());
 
             } catch (Exception ex) {
-                Messages.showMessageDialog(project, "Failed to connect to " + DbTypeName + " database,please check username and password,or mysql is version 8?" + isMySQL_8, "Test connection", Messages.getInformationIcon());
+                Messages.showMessageDialog(project, "Failed to connect to " + dbTypeName + " database,please check username and password,or mysql is version 8?", "Test connection", Messages.getInformationIcon());
 //                new UserUI(driverClass, address, anActionEvent, config);
                 return;
             } finally {
@@ -156,7 +161,7 @@ public class UserUI extends JFrame {
             if (users == null) {
                 users = new HashMap<>();
             }
-            users.put(originAddress, new User(usernameField.getText()));
+            users.put(address, new User(usernameField.getText()));
             CredentialAttributes attributes = new CredentialAttributes("better-mybatis-generator-" + address, usernameField.getText(), this.getClass(), false);
             Credentials saveCredentials = new Credentials(attributes.getUserName(), passwordField.getText());
             PasswordSafe.getInstance().set(attributes, saveCredentials);
