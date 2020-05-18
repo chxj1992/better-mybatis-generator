@@ -527,8 +527,7 @@ public class Generate {
 
         // @Mapper 注解
         if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_MAPPER_ANNOTATION).isSelected()) {
-            if (DbType.MySQL.name().equals(databaseType)
-                    || DbType.PostgreSQL.name().equals(databaseType)) {
+            if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration mapperAnnotationPlugin = new PluginConfiguration();
                 mapperAnnotationPlugin.addProperty("type", "cn.kt.MapperAnnotationPlugin");
                 mapperAnnotationPlugin.setConfigurationType("cn.kt.MapperAnnotationPlugin");
@@ -538,12 +537,22 @@ public class Generate {
 
         // Lombok 支持
         if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_LOMBOK).isSelected()) {
-            if (DbType.MySQL.name().equals(databaseType)
-                    || DbType.PostgreSQL.name().equals(databaseType)) {
+            if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration lombokPlugin = new PluginConfiguration();
                 lombokPlugin.addProperty("type", "cn.kt.LombokPlugin");
                 lombokPlugin.setConfigurationType("cn.kt.LombokPlugin");
                 context.addPluginConfiguration(lombokPlugin);
+            }
+        }
+
+        // 简洁命名
+        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_SHORT_METHOD_NAME).isSelected()) {
+            if (DbType.MySQL.name().equals(databaseType)
+                    || DbType.PostgreSQL.name().equals(databaseType)) {
+                PluginConfiguration shortMethodNamePlugin = new PluginConfiguration();
+                shortMethodNamePlugin.addProperty("type", "cn.kt.ShortMethodNamePlugin");
+                shortMethodNamePlugin.setConfigurationType("cn.kt.ShortMethodNamePlugin");
+                context.addPluginConfiguration(shortMethodNamePlugin);
             }
         }
     }

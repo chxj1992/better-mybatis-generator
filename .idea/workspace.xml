@@ -2,33 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3f00be24-fdf5-474f-b04f-ad0c276b7500" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cn/kt/constant/Constant.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cn/kt/constant/Defaults.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cn/kt/constant/ExtendFeatureEnum.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cn/kt/ui/Configurable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/gene_plugin_1_0_SNAPSHOT.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/better-mybatis-generator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/better-mybatis-generator.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/gene-plugin-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/lib/gene-plugin-1.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/action/MainAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/action/MainAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/cn/kt/generate/Generate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/generate/Generate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/model/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/model/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/model/DbType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/model/DbType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/model/TableInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/model/TableInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/setting/PersistentConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/setting/PersistentConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/setting/SettingConfigurable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/setting/SettingConfigurable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/ui/MainUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/ui/MainUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/ui/SettingUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/ui/SettingUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/ui/UserUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/ui/UserUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/util/GeneratorCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/util/GeneratorCallback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/util/JTextFieldHintListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/util/JTextFieldHintListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cn/kt/util/StringUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cn/kt/util/StringUtils.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -60,7 +36,7 @@
         <entry file="file://$PROJECT_DIR$/src/cn/kt/ui/SettingUI.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-293">
-              <caret line="220" lean-forward="true" selection-start-line="220" selection-end-line="220" />
+              <caret line="220" selection-start-line="220" selection-end-line="220" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1395#1396#0" expanded="true" />
@@ -83,7 +59,7 @@
         <entry file="file://$PROJECT_DIR$/src/cn/kt/ui/MainUI.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="215">
-              <caret line="368" column="40" lean-forward="true" selection-start-line="368" selection-start-column="40" selection-end-line="368" selection-end-column="40" />
+              <caret line="368" column="40" selection-start-line="368" selection-start-column="40" selection-end-line="368" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -100,29 +76,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/src.zip!/javax/swing/JCheckBox.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="77" column="13" selection-start-line="77" selection-start-column="13" selection-end-line="77" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home/src.zip!/java/util/Map.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="164">
-              <caret line="211" column="6" selection-start-line="211" selection-start-column="6" selection-end-line="211" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/cn/kt/generate/Generate.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="265">
-              <caret line="540" column="68" selection-start-line="540" selection-start-column="68" selection-end-line="540" selection-end-column="68" />
+            <state relative-caret-position="254">
+              <caret line="556" column="9" selection-start-line="556" selection-start-column="9" selection-end-line="556" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1924#1925#0" expanded="true" />
@@ -359,6 +317,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="GO_FMT" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
@@ -424,18 +383,25 @@
       <updated>1589701858380</updated>
       <workItem from="1589701860191" duration="239000" />
       <workItem from="1589702198626" duration="78000" />
-      <workItem from="1589709055325" duration="12881000" />
+      <workItem from="1589709055325" duration="14587000" />
     </task>
+    <task id="LOCAL-00001" summary="1. 重构&#10;2. @Mapper注解&#10;3. Lombok支持">
+      <created>1589733150792</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1589733150792</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16761000" />
+    <option name="totallyTimeSpent" value="18467000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24964234" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24964234" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -444,8 +410,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32891566" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.31084338" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.37710842" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.31084338" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.37710842" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -524,6 +490,22 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="1. 重构&#10;2. @Mapper注解&#10;3. Lombok支持" />
+    <option name="LAST_COMMIT_MESSAGE" value="1. 重构&#10;2. @Mapper注解&#10;3. Lombok支持" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$PROJECT_DIR$/lib/gene-plugin-1.0-SNAPSHOT.jar!/cn/kt/ShortMethodNamePlugin.class</url>
+          <line>24</line>
+          <properties />
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -864,7 +846,7 @@
     <entry file="file://$PROJECT_DIR$/src/cn/kt/ui/MainUI.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="215">
-          <caret line="368" column="40" lean-forward="true" selection-start-line="368" selection-start-column="40" selection-end-line="368" selection-end-column="40" />
+          <caret line="368" column="40" selection-start-line="368" selection-start-column="40" selection-end-line="368" selection-end-column="40" />
         </state>
       </provider>
     </entry>
@@ -878,7 +860,7 @@
     <entry file="file://$PROJECT_DIR$/src/cn/kt/ui/SettingUI.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-293">
-          <caret line="220" lean-forward="true" selection-start-line="220" selection-end-line="220" />
+          <caret line="220" selection-start-line="220" selection-end-line="220" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1395#1396#0" expanded="true" />
@@ -897,10 +879,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/mybatis-generator-core-1.3.5.jar!/org/mybatis/generator/internal/PluginAggregator.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="963" selection-start-line="963" selection-end-line="963" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/gene-plugin-1.0-SNAPSHOT.jar!/cn/kt/ShortMethodNamePlugin.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/cn/kt/generate/Generate.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="265">
-          <caret line="540" column="68" selection-start-line="540" selection-start-column="68" selection-end-line="540" selection-end-column="68" />
+        <state relative-caret-position="254">
+          <caret line="556" column="9" selection-start-line="556" selection-start-column="9" selection-end-line="556" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1924#1925#0" expanded="true" />
