@@ -36,7 +36,7 @@ public class SettingUI extends JDialog implements Configurable {
     private JTextField mapperNameField = new JTextField(10);
     private JTextField domainNameField = new JTextField(10);
     private JTextField keyField = new JTextField(12);
-
+    private JTextField authorField = new JTextField(10);
 
     private PersistentConfig persistentConfig;
     private Config config;
@@ -59,6 +59,13 @@ public class SettingUI extends JDialog implements Configurable {
         paneMainTop.add(paneMainTop2);
         paneMainTop.add(paneMainTop3);
         paneMainTop.add(paneMainTop4);
+
+        JPanel paneLeft0 = new JPanel();
+        paneLeft0.setLayout(new FlowLayout(FlowLayout.LEFT));
+        paneLeft0.add(new JLabel("author : "));
+        authorField.setText("");
+        authorField.setEnabled(true);
+        paneLeft0.add(authorField);
 
         JPanel paneLeft1 = new JPanel();
         paneLeft1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -86,6 +93,7 @@ public class SettingUI extends JDialog implements Configurable {
         mapperNameField.setText("Dao");
         paneRight2.add(mapperNameField);
 
+        paneMainTop1.add(paneLeft0);
         paneMainTop1.add(paneLeft1);
         paneMainTop1.add(paneLeft2);
         paneMainTop2.add(paneRight1);
@@ -222,6 +230,7 @@ public class SettingUI extends JDialog implements Configurable {
         JBPanel paneMainDown = buildPanelDown(config);
 
         if (initConfig != null) {
+            authorField.setText(config.getAuthor());
             mapperNameField.setText(config.getMapperPostfix());
             modelPackageField.setText(config.getModelPackage());
             daoPackageField.setText(config.getMapperPackage());
@@ -248,6 +257,7 @@ public class SettingUI extends JDialog implements Configurable {
     public void apply() {
         HashMap<String, Config> initConfig = new HashMap<>(1);
 
+        config.setAuthor(authorField.getText());
         config.setMapperPostfix(mapperNameField.getText());
         config.setModelPackage(modelPackageField.getText());
         config.setMapperPackage(daoPackageField.getText());

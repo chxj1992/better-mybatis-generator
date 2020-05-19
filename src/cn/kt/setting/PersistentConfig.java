@@ -37,7 +37,7 @@ public class PersistentConfig implements PersistentStateComponent<PersistentConf
     }
 
     @Override
-    public void loadState(@NotNull PersistentConfig persistentConfig) {
+    public void loadState(PersistentConfig persistentConfig) {
         XmlSerializerUtil.copyBean(persistentConfig, this);
     }
 

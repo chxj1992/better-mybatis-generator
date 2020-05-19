@@ -1,14 +1,33 @@
 package cn.kt.generate;
 
-import cn.kt.DbRemarksCommentGenerator;
-import cn.kt.constant.ExtendFeatureEnum;
-import cn.kt.model.Config;
-import cn.kt.model.DbType;
-import cn.kt.model.User;
-import cn.kt.setting.PersistentConfig;
-import cn.kt.ui.UserUI;
-import cn.kt.util.GeneratorCallback;
-import cn.kt.util.StringUtils;
+import static cn.kt.constant.Defaults.DEFAULT_PACKAGE_NAME;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
+import org.mybatis.generator.api.MyBatisGenerator;
+import org.mybatis.generator.api.ShellCallback;
+import org.mybatis.generator.config.CommentGeneratorConfiguration;
+import org.mybatis.generator.config.Configuration;
+import org.mybatis.generator.config.Context;
+import org.mybatis.generator.config.GeneratedKey;
+import org.mybatis.generator.config.JDBCConnectionConfiguration;
+import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
+import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
+import org.mybatis.generator.config.JavaTypeResolverConfiguration;
+import org.mybatis.generator.config.ModelType;
+import org.mybatis.generator.config.PluginConfiguration;
+import org.mybatis.generator.config.PropertyRegistry;
+import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
+import org.mybatis.generator.config.TableConfiguration;
+import org.mybatis.generator.internal.DefaultShellCallback;
+
 import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.database.model.RawConnectionConfig;
 import com.intellij.database.psi.DbDataSource;
@@ -23,16 +42,16 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.mybatis.generator.api.MyBatisGenerator;
-import org.mybatis.generator.api.ShellCallback;
-import org.mybatis.generator.config.*;
-import org.mybatis.generator.internal.DefaultShellCallback;
 
-import java.io.File;
-import java.util.*;
-
-import static cn.kt.constant.Defaults.DEFAULT_PACKAGE_NAME;
+import cn.kt.MyCommentGenerator;
+import cn.kt.constant.ExtendFeatureEnum;
+import cn.kt.model.Config;
+import cn.kt.model.DbType;
+import cn.kt.model.User;
+import cn.kt.setting.PersistentConfig;
+import cn.kt.ui.UserUI;
+import cn.kt.util.GeneratorCallback;
+import cn.kt.util.StringUtils;
 
 /**
  * 生成mybatis相关代码
@@ -101,15 +120,20 @@ public class Generate {
         url = connectionConfig.getUrl();
         if (driverClass.contains("mysql")) {
             databaseType = "MySQL";
-        } else if (driverClass.contains("oracle")) {
+        }
+        else if (driverClass.contains("oracle")) {
             databaseType = "Oracle";
-        } else if (driverClass.contains("postgresql")) {
+        }
+        else if (driverClass.contains("postgresql")) {
             databaseType = "PostgreSQL";
-        } else if (driverClass.contains("sqlserver")) {
+        }
+        else if (driverClass.contains("sqlserver")) {
             databaseType = "SqlServer";
-        } else if (driverClass.contains("sqlite")) {
+        }
+        else if (driverClass.contains("sqlite")) {
             databaseType = "Sqlite";
-        } else if (driverClass.contains("mariadb")) {
+        }
+        else if (driverClass.contains("mariadb")) {
             databaseType = "MariaDB";
         }
 
@@ -161,7 +185,8 @@ public class Generate {
                     try {
                         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(configuration, shellCallback, warnings);
                         myBatisGenerator.generate(new GeneratorCallback(), contexts, fullyQualifiedTables);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         // Messages.showMessageDialog(e.getMessage() + " if use mysql,check version8?", "Generate failure", Messages.getInformationIcon());
                         System.out.println("代码生成报错");
 
@@ -264,7 +289,8 @@ public class Generate {
             jdbcConfig.setDriverClass(driverClass);
             jdbcConfig.setConnectionURL(url);
             return jdbcConfig;
-        } else {
+        }
+        else {
             new UserUI(driverClass, url, anActionEvent, config);
             return null;
         }
@@ -288,11 +314,13 @@ public class Generate {
             String[] nameSplit = url.split("/");
             schema = nameSplit[nameSplit.length - 1];
             tableConfig.setSchema(schema);
-        } else if (databaseType.equals(DbType.Oracle.name())) {
+        }
+        else if (databaseType.equals(DbType.Oracle.name())) {
             String[] nameSplit = url.split(":");
             schema = nameSplit[nameSplit.length - 1];
             tableConfig.setCatalog(schema);
-        } else {
+        }
+        else {
             String[] nameSplit = url.split("/");
             schema = nameSplit[nameSplit.length - 1];
             tableConfig.setCatalog(schema);
@@ -307,10 +335,12 @@ public class Generate {
         if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_SCHEMA_PREFIX).isSelected()) {
             if (DbType.MySQL.name().equals(databaseType)) {
                 tableConfig.setSchema(schema);
-            } else if (DbType.Oracle.name().equals(databaseType)) {
+            }
+            else if (DbType.Oracle.name().equals(databaseType)) {
                 //Oracle的schema为用户名，如果连接用户拥有dba等高级权限，若不设schema，会导致把其他用户下同名的表也生成一遍导致mapper中代码重复
                 tableConfig.setSchema(username);
-            } else {
+            }
+            else {
                 tableConfig.setCatalog(schema);
             }
         }
@@ -333,7 +363,7 @@ public class Generate {
             tableConfig.setGeneratedKey(new GeneratedKey(config.getPrimaryKey(), dbType, true, null));
         }
 
-        if ( config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_ACTUAL_NAME).isSelected()) {
+        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_ACTUAL_NAME).isSelected()) {
             tableConfig.addProperty("useActualColumnNames", "true");
         }
 
@@ -420,7 +450,8 @@ public class Generate {
     private String getTargetPackage(String targetPackage) {
         if (!StringUtils.isEmpty(targetPackage)) {
             return targetPackage;
-        } else {
+        }
+        else {
             return DEFAULT_PACKAGE_NAME;
         }
     }
@@ -428,21 +459,23 @@ public class Generate {
     private String getTargetProject(String targetFolder, String projectFolder, String mvnPath) {
         if (!StringUtils.isEmpty(targetFolder)) {
             return targetFolder + "/" + mvnPath + "/";
-        } else {
+        }
+        else {
             return projectFolder + "/" + mvnPath + "/";
         }
     }
 
     /**
-     * 生成注释配置
+     * 生成注释
      *
      * @return
      */
     private CommentGeneratorConfiguration buildCommentConfig() {
         CommentGeneratorConfiguration commentConfig = new CommentGeneratorConfiguration();
-        commentConfig.setConfigurationType(DbRemarksCommentGenerator.class.getName());
+        commentConfig.setConfigurationType(MyCommentGenerator.class.getName());
 
         if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_COMMENT).isSelected()) {
+            commentConfig.addProperty("author", config.getAuthor());
             commentConfig.addProperty("columnRemarks", "true");
         }
         if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_JPA_ANNOTATION).isSelected()) {
@@ -479,7 +512,7 @@ public class Generate {
         }
 
         // limit/offset 支持
-        if ( config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_OFFSET_LIMIT).isSelected()) {
+        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_OFFSET_LIMIT).isSelected()) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration mysqlLimitPlugin = new PluginConfiguration();
                 mysqlLimitPlugin.addProperty("type", "cn.kt.MySQLLimitPlugin");
@@ -489,7 +522,7 @@ public class Generate {
         }
 
         // JSR310 Date API 支持
-        if ( config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_JSR310).isSelected()) {
+        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_JSR310).isSelected()) {
             JavaTypeResolverConfiguration javaTypeResolverPlugin = new JavaTypeResolverConfiguration();
             javaTypeResolverPlugin.setConfigurationType("cn.kt.JavaTypeResolverJsr310Impl");
             context.setJavaTypeResolverConfiguration(javaTypeResolverPlugin);
@@ -576,7 +609,8 @@ public class Generate {
         }
         if (!StringUtils.isEmpty(config.getMapperName())) {
             sb.append(config.getMapperName()).append(".xml");
-        } else {
+        }
+        else {
             sb.append(config.getModelName()).append("Dao.xml");
         }
 

@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * 界面配置
+ * @author chenxiaojing
  */
 public class Config {
 
@@ -15,6 +16,11 @@ public class Config {
 	 * 配置名称
 	 */
 	private String name;
+
+	/**
+	 * 作者
+	 */
+	private String author;
 
 	/**
 	 * 表名
@@ -228,4 +234,11 @@ public class Config {
 		this.mapperPostfix = mapperPostfix;
 	}
 
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 }

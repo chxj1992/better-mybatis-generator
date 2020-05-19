@@ -9,7 +9,7 @@ public enum ExtendFeatureEnum {
      * 扩展配置选项
      */
     ADD_OFFSET_LIMIT("分页支持", false),
-    ADD_COMMENT("字段注释", true),
+    ADD_COMMENT("生成注释", true),
     OVERRIDE_XML("XML覆盖", true),
     ADD_TO_STRING_AND_HASH_CODE_EQUALS("toString/hashCode/equals", true),
     USE_SCHEMA_PREFIX("使用Schema前缀", true),

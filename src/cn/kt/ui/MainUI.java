@@ -1,6 +1,5 @@
 package cn.kt.ui;
 
-import cn.kt.constant.ExtendFeatureEnum;
 import cn.kt.generate.Generate;
 import cn.kt.model.Config;
 import cn.kt.model.TableInfo;
@@ -50,6 +49,7 @@ public class MainUI extends JFrame implements Configurable {
     private JTextField mapperNameField = new JTextField(10);
     private JTextField modelNameField = new JTextField(10);
     private JTextField keyField = new JTextField(10);
+    private JTextField authorField = new JTextField(10);
 
 
     public MainUI(AnActionEvent anActionEvent) throws HeadlessException {
@@ -119,9 +119,19 @@ public class MainUI extends JFrame implements Configurable {
         paneMainTop.add(paneMainTop3);
         paneMainTop.add(paneMainTop4);
 
+        JPanel paneLeft0 = new JPanel();
+        paneLeft0.setLayout(new FlowLayout(FlowLayout.LEFT));
+        paneLeft0.add(new JLabel("author : "));
+        authorField.setText("");
+        authorField.setEnabled(true);
+        paneLeft0.add(authorField);
+        if (config != null && !StringUtils.isEmpty(config.getAuthor())) {
+            authorField.setText(config.getAuthor());
+        }
+
         JPanel paneLeft1 = new JPanel();
         paneLeft1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JLabel tablejLabel = new JLabel("table name :");
+        JLabel tablejLabel = new JLabel("table name : ");
         tablejLabel.setSize(new Dimension(20, 30));
         paneLeft1.add(tablejLabel);
         if (psiElements.length > 1) {
@@ -133,7 +143,7 @@ public class MainUI extends JFrame implements Configurable {
 
         JPanel paneLeft2 = new JPanel();
         paneLeft2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        paneLeft2.add(new JLabel("主键(选填) :"));
+        paneLeft2.add(new JLabel("主键(选填) : "));
         if (psiElements.length > 1) {
             keyField.addFocusListener(new JTextFieldHintListener(keyField, "eg. primary key"));
         } else {
@@ -143,7 +153,7 @@ public class MainUI extends JFrame implements Configurable {
 
         JPanel paneRight1 = new JPanel();
         paneRight1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        paneRight1.add(new JLabel("model :"));
+        paneRight1.add(new JLabel("model : "));
         if (psiElements.length > 1) {
             modelNameField.addFocusListener(new JTextFieldHintListener(modelNameField, "eg. DbTable"));
         } else {
@@ -170,6 +180,7 @@ public class MainUI extends JFrame implements Configurable {
 
         paneRight2.add(mapperNameField);
 
+        paneMainTop1.add(paneLeft0);
         paneMainTop1.add(paneLeft1);
         paneMainTop1.add(paneLeft2);
         paneMainTop2.add(paneRight1);
@@ -482,6 +493,7 @@ public class MainUI extends JFrame implements Configurable {
         config.setMapperTargetFolder(daoFolderBtn.getText());
         config.setXmlPackage(xmlPackageField.getText());
         config.setXmlTargetFolder(xmlFolderBtn.getText());
+        config.setAuthor(authorField.getText());
     }
 
     private void fillOtherConfig(Config config) {
