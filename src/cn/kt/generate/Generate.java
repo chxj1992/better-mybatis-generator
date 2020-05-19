@@ -580,12 +580,22 @@ public class Generate {
 
         // 简洁命名
         if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_SHORT_METHOD_NAME).isSelected()) {
-            if (DbType.MySQL.name().equals(databaseType)
-                    || DbType.PostgreSQL.name().equals(databaseType)) {
+            if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration shortMethodNamePlugin = new PluginConfiguration();
                 shortMethodNamePlugin.addProperty("type", "cn.kt.ShortMethodNamePlugin");
                 shortMethodNamePlugin.setConfigurationType("cn.kt.ShortMethodNamePlugin");
                 context.addPluginConfiguration(shortMethodNamePlugin);
+            }
+        }
+
+        // 添加注解
+        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_COMMENT).isSelected()) {
+            if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
+                PluginConfiguration mapperCommentPlugin = new PluginConfiguration();
+                mapperCommentPlugin.addProperty("type", "cn.kt.MapperCommentPlugin");
+                mapperCommentPlugin.addProperty("author", config.getAuthor());
+                mapperCommentPlugin.setConfigurationType("cn.kt.MapperCommentPlugin");
+                context.addPluginConfiguration(mapperCommentPlugin);
             }
         }
     }
