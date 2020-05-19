@@ -61,7 +61,7 @@ public class MainUI extends JFrame implements Configurable {
         Map<String, Config> initConfigMap = persistentConfig.getInitConfig();
         Map<String, Config> historyConfigList = persistentConfig.getHistoryConfigList();
 
-
+        config = new Config();
         setTitle("mybatis generate tool");
         // 设置大小
         setPreferredSize(new Dimension(1200, 700));
