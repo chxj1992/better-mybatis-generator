@@ -59,7 +59,6 @@ public class Config {
 	private String mapperTargetFolder;
 	private String mapperPath;
 
-	private String xmlPackage;
 	private String xmlTargetFolder;
 	private String xmlPath;
 
@@ -155,14 +154,6 @@ public class Config {
 
 	public void setMapperTargetFolder(String mapperTargetFolder) {
 		this.mapperTargetFolder = mapperTargetFolder;
-	}
-
-	public String getXmlPackage() {
-		return xmlPackage;
-	}
-
-	public void setXmlPackage(String xmlPackage) {
-		this.xmlPackage = xmlPackage;
 	}
 
 	public String getXmlTargetFolder() {

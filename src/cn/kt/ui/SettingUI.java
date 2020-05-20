@@ -32,7 +32,6 @@ public class SettingUI extends JDialog implements Configurable {
     private JTextField tableNameField = new JTextField(10);
     private JBTextField modelPackageField = new JBTextField(12);
     private JBTextField daoPackageField = new JBTextField(12);
-    private JBTextField xmlPackageField = new JBTextField(12);
     private JTextField mapperNameField = new JTextField(10);
     private JTextField domainNameField = new JTextField(10);
     private JTextField keyField = new JTextField(12);
@@ -133,16 +132,8 @@ public class SettingUI extends JDialog implements Configurable {
         });
         daoPackagePanel.add(packageBtn2);
 
-        JPanel xmlPackagePanel = new JPanel();
-        xmlPackagePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JLabel labelLeft6 = new JLabel("xml package : ");
-        xmlPackagePanel.add(labelLeft6);
-        xmlPackagePanel.add(xmlPackageField);
-
         paneMainTop3.add(modelPackagePanel);
         paneMainTop3.add(daoPackagePanel);
-        paneMainTop3.add(xmlPackagePanel);
-
 
         JPanel projectFolderPanel = new JPanel();
         projectFolderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -234,7 +225,6 @@ public class SettingUI extends JDialog implements Configurable {
             mapperNameField.setText(config.getMapperPostfix());
             modelPackageField.setText(config.getModelPackage());
             daoPackageField.setText(config.getMapperPackage());
-            xmlPackageField.setText(config.getXmlPackage());
 
             projectFolderBtn.setText(config.getProjectFolder());
             modelFolderBtn.setText(config.getModelTargetFolder());
@@ -243,7 +233,6 @@ public class SettingUI extends JDialog implements Configurable {
         } else {
             modelPackageField.addFocusListener(new JTextFieldHintListener(modelPackageField, DEFAULT_PACKAGE_NAME));
             daoPackageField.addFocusListener(new JTextFieldHintListener(daoPackageField, DEFAULT_PACKAGE_NAME));
-            xmlPackageField.addFocusListener(new JTextFieldHintListener(xmlPackageField, DEFAULT_PACKAGE_NAME));
         }
 
         mainPanel.add(paneMainTop);
@@ -261,7 +250,6 @@ public class SettingUI extends JDialog implements Configurable {
         config.setMapperPostfix(mapperNameField.getText());
         config.setModelPackage(modelPackageField.getText());
         config.setMapperPackage(daoPackageField.getText());
-        config.setXmlPackage(xmlPackageField.getText());
         config.setProjectFolder(projectFolderBtn.getText());
         config.setModelTargetFolder(modelFolderBtn.getText());
         config.setMapperTargetFolder(daoFolderBtn.getText());

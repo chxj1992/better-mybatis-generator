@@ -425,13 +425,13 @@ public class Generate {
     private SqlMapGeneratorConfiguration buildMapperXmlConfig() {
 
         String projectFolder = config.getProjectFolder();
-        String xmlPackage = config.getXmlPackage();
+        String mapperPackage = config.getMapperPackage();
         String xmlTargetFolder = config.getXmlTargetFolder();
         String xmlMvnPath = config.getXmlPath();
 
         SqlMapGeneratorConfiguration mapperConfig = new SqlMapGeneratorConfiguration();
 
-        mapperConfig.setTargetPackage(getTargetPackage(xmlPackage));
+        mapperConfig.setTargetPackage(getTargetPackage(mapperPackage));
         mapperConfig.setTargetProject(getTargetProject(xmlTargetFolder, projectFolder, xmlMvnPath));
 
         // mybatis-generator 默认在已生成的xml后面追加内容, 当选择 OverrideXML 配置项时, 则直接覆盖
@@ -631,13 +631,13 @@ public class Generate {
      */
     private String getMappingXmlFilePath(Config config) {
         StringBuilder sb = new StringBuilder();
-        String xmlPackage = config.getXmlPackage();
+        String mapperPackage = config.getMapperPackage();
         String xmlTargetFolder = config.getXmlTargetFolder();
-        String xmlMvnPath = config.getXmlPath();
-        sb.append(xmlTargetFolder).append("/").append(xmlMvnPath).append("/");
+        String xmlPath = config.getXmlPath();
+        sb.append(xmlTargetFolder).append("/").append(xmlPath).append("/");
 
-        if (!StringUtils.isEmpty(xmlPackage)) {
-            sb.append(xmlPackage.replace(".", "/")).append("/");
+        if (!StringUtils.isEmpty(mapperPackage)) {
+            sb.append(mapperPackage.replace(".", "/")).append("/");
         }
         if (!StringUtils.isEmpty(config.getMapperName())) {
             sb.append(config.getMapperName()).append(".xml");
