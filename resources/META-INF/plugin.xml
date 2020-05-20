@@ -67,8 +67,8 @@
 
     <depends optional="true">com.intellij.database</depends>
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceInterface="cn.kt.setting.PersistentConfig"
-                        serviceImplementation="cn.kt.setting.PersistentConfig"/>
+        <projectService serviceInterface="cn.kt.setting.PersistentService"
+                        serviceImplementation="cn.kt.setting.PersistentService"/>
         <projectConfigurable groupId="tools" displayName="Mybatis generator plugin" id="gene.id"
                              instance="cn.kt.setting.SettingConfigurable"/>
     </extensions>
