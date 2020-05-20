@@ -343,6 +343,7 @@ public class MainUI extends JFrame implements Configurable {
 
         Border historyBorder = BorderFactory.createTitledBorder("history config : ");
         panelLeft.setBorder(historyBorder);
+        panelLeft.setPreferredSize(new Dimension(250, 650));
 
         if (historyConfigList == null) {
             historyConfigList = new HashMap<>();
