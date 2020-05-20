@@ -11,7 +11,9 @@ public enum ExtendFeatureEnum {
     ADD_OFFSET_LIMIT("分页支持", false),
     ADD_COMMENT("生成注释", true),
     OVERRIDE_XML("XML覆盖", true),
-    ADD_TO_STRING_AND_HASH_CODE_EQUALS("toString/hashCode/equals", true),
+    SERIALIZABLE("支持序列化", false),
+    ADD_TO_STRING_AND_HASH_CODE_EQUALS("toString/hashCode/equals", false),
+    SET_DEFAULT_TIME_AND_VALID("ctime/utime/valid默认值", true),
     USE_SCHEMA_PREFIX("使用Schema前缀", true),
     ADD_SELECT_FOR_UPDATE("ForUpdate支持", false),
     ADD_REPOSITORY_ANNOTATION("Repository注解", false),
@@ -24,7 +26,8 @@ public enum ExtendFeatureEnum {
     USE_MYSQL8("MySQL8支持", false),
     ADD_MAPPER_ANNOTATION("@Mapper注解", true),
     USE_SHORT_METHOD_NAME("简洁命名", true),
-    USE_LOMBOK("Lombok支持", true);
+    USE_LOMBOK("Lombok支持", true),
+    ADD_BATCH_INSERT("支持批量插入", true);
 
 
     /**

@@ -52,7 +52,7 @@ public class UserUI extends JFrame {
         this.project = anActionEvent.getData(PlatformDataKeys.PROJECT);
         this.persistentConfig = PersistentConfig.getInstance(project);
         this.config = config;
-        setTitle("set username and password");
+        setTitle("input the username and password of database");
         //设置大小
         setPreferredSize(new Dimension(400, 180));
         setLocation(550, 350);
@@ -147,7 +147,9 @@ public class UserUI extends JFrame {
                 conn = DriverManager.getConnection(address, usernameField.getText(), passwordField.getText());
 
             } catch (Exception ex) {
-                Messages.showMessageDialog(project, "Failed to connect to " + dbTypeName + " database,please check username and password,or mysql is version 8?", "Test connection", Messages.getInformationIcon());
+                Messages.showMessageDialog(project, "Failed to connect to " + dbTypeName + " " +
+                        "database, please check the username and password, or mysql is version 8?", "Test connection",
+                        Messages.getInformationIcon());
 //                new UserUI(driverClass, address, anActionEvent, config);
                 return;
             } finally {

@@ -43,7 +43,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 
-import cn.kt.MyCommentGenerator;
+import cn.kt.ModelCommentGenerator;
 import cn.kt.constant.ExtendFeatureEnum;
 import cn.kt.model.Config;
 import cn.kt.model.DbType;
@@ -264,7 +264,7 @@ public class Generate {
 
         JDBCConnectionConfiguration jdbcConfig = new JDBCConnectionConfiguration();
         jdbcConfig.addProperty("nullCatalogMeansCurrent", "true");
-
+        jdbcConfig.addProperty("useInformationSchema", "true");
 
         Map<String, User> users = persistentConfig.getUsers();
         if (users != null && users.containsKey(url)) {
@@ -472,7 +472,7 @@ public class Generate {
      */
     private CommentGeneratorConfiguration buildCommentConfig() {
         CommentGeneratorConfiguration commentConfig = new CommentGeneratorConfiguration();
-        commentConfig.setConfigurationType(MyCommentGenerator.class.getName());
+        commentConfig.setConfigurationType(ModelCommentGenerator.class.getName());
 
         if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_COMMENT).isSelected()) {
             commentConfig.addProperty("author", config.getAuthor());
@@ -492,12 +492,13 @@ public class Generate {
      */
     private void addPluginConfiguration(PsiElement psiElement, Context context) {
 
-
         // 实体添加序列化
-        PluginConfiguration serializablePlugin = new PluginConfiguration();
-        serializablePlugin.addProperty("type", "org.mybatis.generator.plugins.SerializablePlugin");
-        serializablePlugin.setConfigurationType("org.mybatis.generator.plugins.SerializablePlugin");
-        context.addPluginConfiguration(serializablePlugin);
+        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.SERIALIZABLE).isSelected()) {
+            PluginConfiguration serializablePlugin = new PluginConfiguration();
+            serializablePlugin.addProperty("type", "org.mybatis.generator.plugins.SerializablePlugin");
+            serializablePlugin.setConfigurationType("org.mybatis.generator.plugins.SerializablePlugin");
+            context.addPluginConfiguration(serializablePlugin);
+        }
 
         // ToString/Hashcode/Equals 支持
         if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_TO_STRING_AND_HASH_CODE_EQUALS).isSelected()) {
@@ -598,6 +599,27 @@ public class Generate {
                 context.addPluginConfiguration(mapperCommentPlugin);
             }
         }
+
+        // 支持批量插入
+        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_BATCH_INSERT).isSelected()) {
+            if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
+                PluginConfiguration batchInsertPlugin = new PluginConfiguration();
+                batchInsertPlugin.addProperty("type", "cn.kt.BatchInsertPlugin");
+                batchInsertPlugin.setConfigurationType("cn.kt.BatchInsertPlugin");
+                context.addPluginConfiguration(batchInsertPlugin);
+            }
+        }
+
+        // 设置ctime/utime/valid默认值
+        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.SET_DEFAULT_TIME_AND_VALID).isSelected()) {
+            if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
+                PluginConfiguration defaultValuePlugin = new PluginConfiguration();
+                defaultValuePlugin.addProperty("type", "cn.kt.DefaultValuePlugin");
+                defaultValuePlugin.setConfigurationType("cn.kt.DefaultValuePlugin");
+                context.addPluginConfiguration(defaultValuePlugin);
+            }
+        }
+
     }
 
 
