@@ -2,7 +2,6 @@ package cn.kt.model;
 
 import cn.kt.constant.ExtendFeatureEnum;
 
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,25 +66,22 @@ public class Config {
 	private String encoding;
 	private String connectorJarPath;
 
-	private Map<ExtendFeatureEnum, JCheckBox> featureMap = new HashMap<>();
+	private Map<ExtendFeatureEnum, Boolean> featureMap = new HashMap<>();
 
-	public JCheckBox fetchFeatureCheckBox(ExtendFeatureEnum featureEnum) {
-		JCheckBox jCheckBox;
-		if (featureMap.containsKey(featureEnum)) {
-			jCheckBox = featureMap.get(featureEnum);
-		} else {
-			jCheckBox = new JCheckBox(featureEnum.getDesc());
-			jCheckBox.setSelected(featureEnum.isDefaultChecked());
-			featureMap.put(featureEnum, jCheckBox);
+	public Boolean isSelected(ExtendFeatureEnum featureEnum) {
+		Boolean hasFeature = featureMap.get(featureEnum);
+		if (hasFeature != null) {
+			return hasFeature;
 		}
-		return jCheckBox;
+		featureMap.put(featureEnum, featureEnum.isDefaultChecked());
+		return featureEnum.isDefaultChecked();
 	}
 
-	public Map<ExtendFeatureEnum, JCheckBox> getFeatureMap() {
+	public Map<ExtendFeatureEnum, Boolean> getFeatureMap() {
 		return featureMap;
 	}
 
-	public void setFeatureMap(Map<ExtendFeatureEnum, JCheckBox> featureMap) {
+	public void setFeatureMap(Map<ExtendFeatureEnum, Boolean> featureMap) {
 		this.featureMap = featureMap;
 	}
 

@@ -18,26 +18,26 @@ import java.util.Map;
  * 配置持久化
  * @author chenxiaojing
  */
-@State(name = "PersistentConfig", storages = {@Storage("generator-config.xml")})
-public class PersistentConfig implements PersistentStateComponent<PersistentConfig> {
+@State(name = "PersistentService", storages = {@Storage("mybatis-generator-config.xml")})
+public class PersistentService implements PersistentStateComponent<PersistentService> {
 
     private Map<String, Config> initConfig;
     private Map<String, User> users;
     private Map<String, Config> historyConfigList;
 
     @Nullable
-    public static PersistentConfig getInstance(Project project) {
-        return ServiceManager.getService(project, PersistentConfig.class);
+    public static PersistentService getInstance(Project project) {
+        return ServiceManager.getService(project, PersistentService.class);
     }
 
     @Override
     @Nullable
-    public PersistentConfig getState() {
+    public PersistentService getState() {
         return this;
     }
 
     @Override
-    public void loadState(PersistentConfig persistentConfig) {
+    public void loadState(@NotNull PersistentService persistentConfig) {
         XmlSerializerUtil.copyBean(persistentConfig, this);
     }
 

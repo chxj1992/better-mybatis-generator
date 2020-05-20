@@ -48,7 +48,7 @@ import cn.kt.constant.ExtendFeatureEnum;
 import cn.kt.model.Config;
 import cn.kt.model.DbType;
 import cn.kt.model.User;
-import cn.kt.setting.PersistentConfig;
+import cn.kt.setting.PersistentService;
 import cn.kt.ui.UserUI;
 import cn.kt.util.GeneratorCallback;
 import cn.kt.util.StringUtils;
@@ -67,7 +67,7 @@ public class Generate {
     /**
      * 持久化的配置
      */
-    private PersistentConfig persistentConfig;
+    private PersistentService persistentConfig;
 
     /**
      * 界面默认配置
@@ -104,7 +104,7 @@ public class Generate {
     public void execute(AnActionEvent anActionEvent) throws Exception {
         this.anActionEvent = anActionEvent;
         this.project = anActionEvent.getData(PlatformDataKeys.PROJECT);
-        this.persistentConfig = PersistentConfig.getInstance(project);
+        this.persistentConfig = PersistentService.getInstance(project);
 
         //执行前 先保存一份当前配置
         saveConfig();
@@ -282,7 +282,7 @@ public class Generate {
             jdbcConfig.setUserId(username);
             jdbcConfig.setPassword(password);
 
-            if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_MYSQL8).isSelected()) {
+            if (config.isSelected(ExtendFeatureEnum.USE_MYSQL8)) {
                 driverClass = DbType.MySQL_8.getDriverClass();
             }
 
@@ -326,13 +326,13 @@ public class Generate {
             tableConfig.setCatalog(schema);
         }
 
-        if (!config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_EXAMPLE).isSelected()) {
+        if (!config.isSelected(ExtendFeatureEnum.ADD_EXAMPLE)) {
             tableConfig.setUpdateByExampleStatementEnabled(false);
             tableConfig.setCountByExampleStatementEnabled(false);
             tableConfig.setDeleteByExampleStatementEnabled(false);
             tableConfig.setSelectByExampleStatementEnabled(false);
         }
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_SCHEMA_PREFIX).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.USE_SCHEMA_PREFIX)) {
             if (DbType.MySQL.name().equals(databaseType)) {
                 tableConfig.setSchema(schema);
             }
@@ -363,11 +363,11 @@ public class Generate {
             tableConfig.setGeneratedKey(new GeneratedKey(config.getPrimaryKey(), dbType, true, null));
         }
 
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_ACTUAL_NAME).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.USE_ACTUAL_NAME)) {
             tableConfig.addProperty("useActualColumnNames", "true");
         }
 
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_TABLE_ALIAS).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.USE_TABLE_ALIAS)) {
             tableConfig.setAlias(config.getTableName());
         }
 
@@ -435,7 +435,7 @@ public class Generate {
         mapperConfig.setTargetProject(getTargetProject(xmlTargetFolder, projectFolder, xmlMvnPath));
 
         // mybatis-generator 默认在已生成的xml后面追加内容, 当选择 OverrideXML 配置项时, 则直接覆盖
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.OVERRIDE_XML).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.OVERRIDE_XML)) {
             String xmlFilePath = getMappingXmlFilePath(config);
             File xmlFile = new File(xmlFilePath);
             if (xmlFile.exists()) {
@@ -474,11 +474,11 @@ public class Generate {
         CommentGeneratorConfiguration commentConfig = new CommentGeneratorConfiguration();
         commentConfig.setConfigurationType(ModelCommentGenerator.class.getName());
 
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_COMMENT).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.ADD_COMMENT)) {
             commentConfig.addProperty("author", config.getAuthor());
             commentConfig.addProperty("columnRemarks", "true");
         }
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_JPA_ANNOTATION).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.ADD_JPA_ANNOTATION)) {
             commentConfig.addProperty("annotations", "true");
         }
 
@@ -493,7 +493,7 @@ public class Generate {
     private void addPluginConfiguration(PsiElement psiElement, Context context) {
 
         // 实体添加序列化
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.SERIALIZABLE).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.SERIALIZABLE)) {
             PluginConfiguration serializablePlugin = new PluginConfiguration();
             serializablePlugin.addProperty("type", "org.mybatis.generator.plugins.SerializablePlugin");
             serializablePlugin.setConfigurationType("org.mybatis.generator.plugins.SerializablePlugin");
@@ -501,7 +501,7 @@ public class Generate {
         }
 
         // ToString/Hashcode/Equals 支持
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_TO_STRING_AND_HASH_CODE_EQUALS).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.ADD_TO_STRING_AND_HASH_CODE_EQUALS)) {
             PluginConfiguration equalsHashCodePlugin = new PluginConfiguration();
             equalsHashCodePlugin.addProperty("type", "org.mybatis.generator.plugins.EqualsHashCodePlugin");
             equalsHashCodePlugin.setConfigurationType("org.mybatis.generator.plugins.EqualsHashCodePlugin");
@@ -513,7 +513,7 @@ public class Generate {
         }
 
         // limit/offset 支持
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_OFFSET_LIMIT).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.ADD_OFFSET_LIMIT)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration mysqlLimitPlugin = new PluginConfiguration();
                 mysqlLimitPlugin.addProperty("type", "cn.kt.MySQLLimitPlugin");
@@ -523,14 +523,14 @@ public class Generate {
         }
 
         // JSR310 Date API 支持
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_JSR310).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.USE_JSR310)) {
             JavaTypeResolverConfiguration javaTypeResolverPlugin = new JavaTypeResolverConfiguration();
             javaTypeResolverPlugin.setConfigurationType("cn.kt.JavaTypeResolverJsr310Impl");
             context.setJavaTypeResolverConfiguration(javaTypeResolverPlugin);
         }
 
         // SelectForUpdate 支持
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_SELECT_FOR_UPDATE).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.ADD_SELECT_FOR_UPDATE)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration mysqlForUpdatePlugin = new PluginConfiguration();
                 mysqlForUpdatePlugin.addProperty("type", "cn.kt.MySQLForUpdatePlugin");
@@ -540,7 +540,7 @@ public class Generate {
         }
 
         // @Repository 注解
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_REPOSITORY_ANNOTATION).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.ADD_REPOSITORY_ANNOTATION)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration repositoryPlugin = new PluginConfiguration();
                 repositoryPlugin.addProperty("type", "cn.kt.RepositoryPlugin");
@@ -550,7 +550,7 @@ public class Generate {
         }
 
         // 继承模式
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_EXTEND_STYLE).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.USE_EXTEND_STYLE)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration commonDaoInterfacePlugin = new PluginConfiguration();
                 commonDaoInterfacePlugin.addProperty("type", "cn.kt.CommonDAOInterfacePlugin");
@@ -560,7 +560,7 @@ public class Generate {
         }
 
         // @Mapper 注解
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_MAPPER_ANNOTATION).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.ADD_MAPPER_ANNOTATION)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration mapperAnnotationPlugin = new PluginConfiguration();
                 mapperAnnotationPlugin.addProperty("type", "cn.kt.MapperAnnotationPlugin");
@@ -570,7 +570,7 @@ public class Generate {
         }
 
         // Lombok 支持
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_LOMBOK).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.USE_LOMBOK)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration lombokPlugin = new PluginConfiguration();
                 lombokPlugin.addProperty("type", "cn.kt.LombokPlugin");
@@ -580,7 +580,7 @@ public class Generate {
         }
 
         // 简洁命名
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_SHORT_METHOD_NAME).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.USE_SHORT_METHOD_NAME)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration shortMethodNamePlugin = new PluginConfiguration();
                 shortMethodNamePlugin.addProperty("type", "cn.kt.ShortMethodNamePlugin");
@@ -590,7 +590,7 @@ public class Generate {
         }
 
         // 添加注解
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_COMMENT).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.ADD_COMMENT)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration mapperCommentPlugin = new PluginConfiguration();
                 mapperCommentPlugin.addProperty("type", "cn.kt.MapperCommentPlugin");
@@ -601,7 +601,7 @@ public class Generate {
         }
 
         // 支持批量插入
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.ADD_BATCH_INSERT).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.ADD_BATCH_INSERT)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration batchInsertPlugin = new PluginConfiguration();
                 batchInsertPlugin.addProperty("type", "cn.kt.BatchInsertPlugin");
@@ -611,7 +611,7 @@ public class Generate {
         }
 
         // 设置ctime/utime/valid默认值
-        if (config.fetchFeatureCheckBox(ExtendFeatureEnum.SET_DEFAULT_TIME_AND_VALID).isSelected()) {
+        if (config.isSelected(ExtendFeatureEnum.SET_DEFAULT_TIME_AND_VALID)) {
             if (DbType.MySQL.name().equals(databaseType) || DbType.PostgreSQL.name().equals(databaseType)) {
                 PluginConfiguration defaultValuePlugin = new PluginConfiguration();
                 defaultValuePlugin.addProperty("type", "cn.kt.DefaultValuePlugin");

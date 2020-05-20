@@ -3,7 +3,7 @@ package cn.kt.ui;
 import cn.kt.generate.Generate;
 import cn.kt.model.Config;
 import cn.kt.model.TableInfo;
-import cn.kt.setting.PersistentConfig;
+import cn.kt.setting.PersistentService;
 import cn.kt.util.JTextFieldHintListener;
 import cn.kt.util.StringUtils;
 import com.intellij.database.psi.DbTable;
@@ -55,7 +55,7 @@ public class MainUI extends JFrame implements Configurable {
     public MainUI(AnActionEvent anActionEvent) throws HeadlessException {
         this.anActionEvent = anActionEvent;
         this.project = anActionEvent.getData(PlatformDataKeys.PROJECT);
-        PersistentConfig persistentConfig = PersistentConfig.getInstance(project);
+        PersistentService persistentConfig = PersistentService.getInstance(project);
         this.psiElements = anActionEvent.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
 
         Map<String, Config> initConfigMap = persistentConfig.getInitConfig();

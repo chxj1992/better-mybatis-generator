@@ -17,6 +17,7 @@ import javax.swing.*;
  * @date 2018/7/18
  */
 public class SettingConfigurable implements SearchableConfigurable {
+
     private SettingUI mainPanel;
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -30,7 +31,7 @@ public class SettingConfigurable implements SearchableConfigurable {
     @Nls
     @Override
     public String getDisplayName() {
-        return "Mybatis gene plugin";
+        return "Mybatis Generator Plugin";
     }
 
     @Nullable

@@ -1,7 +1,7 @@
 package cn.kt.ui;
 
 import cn.kt.model.Config;
-import cn.kt.setting.PersistentConfig;
+import cn.kt.setting.PersistentService;
 import cn.kt.util.JTextFieldHintListener;
 import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -38,7 +38,7 @@ public class SettingUI extends JDialog implements Configurable {
     private JTextField keyField = new JTextField(12);
     private JTextField authorField = new JTextField(10);
 
-    private PersistentConfig persistentConfig;
+    private PersistentService persistentConfig;
     private Config config;
 
     public SettingUI() {
@@ -90,7 +90,7 @@ public class SettingUI extends JDialog implements Configurable {
         JPanel paneRight2 = new JPanel();
         paneRight2.setLayout(new FlowLayout(FlowLayout.LEFT));
         paneRight2.add(new JLabel("dao postfix : "));
-        mapperNameField.setText("Dao");
+        mapperNameField.setText("Mapper");
         paneRight2.add(mapperNameField);
 
         paneMainTop1.add(paneLeft0);
@@ -217,7 +217,7 @@ public class SettingUI extends JDialog implements Configurable {
         paneMainTop4.add(daoFolderPanel);
         paneMainTop4.add(xmlFolderPanel);
 
-        persistentConfig = PersistentConfig.getInstance(project);
+        persistentConfig = PersistentService.getInstance(project);
         Map<String, Config> initConfig = persistentConfig.getInitConfig();
 
         if (initConfig != null) {

@@ -2,6 +2,8 @@ package cn.kt.ui;
 
 import cn.kt.constant.ExtendFeatureEnum;
 import cn.kt.model.Config;
+import cn.kt.setting.CheckBoxHolder;
+
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTextField;
@@ -26,7 +28,6 @@ public interface Configurable {
 
     JButton setProjectBtn = new JButton("Set-Project-Path");
 
-
     /**
      * 构造底部菜单
      * @param config 当前配置
@@ -37,7 +38,7 @@ public interface Configurable {
         paneMainDown.setBorder(JBUI.Borders.empty(2, 80, 100, 40));
 
         for (ExtendFeatureEnum feature : ExtendFeatureEnum.values()) {
-            JCheckBox featureCheckBox = config.fetchFeatureCheckBox(feature);
+            JCheckBox featureCheckBox = CheckBoxHolder.fetchFeatureCheckBox(config, feature);
             paneMainDown.add(featureCheckBox);
         }
         return paneMainDown;

@@ -4,7 +4,7 @@ import cn.kt.constant.ExtendFeatureEnum;
 import cn.kt.model.Config;
 import cn.kt.model.DbType;
 import cn.kt.model.User;
-import cn.kt.setting.PersistentConfig;
+import cn.kt.setting.PersistentService;
 import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.credentialStore.Credentials;
 import com.intellij.ide.passwordSafe.PasswordSafe;
@@ -35,7 +35,7 @@ public class UserUI extends JFrame {
 
     private AnActionEvent anActionEvent;
     private Project project;
-    private PersistentConfig persistentConfig;
+    private PersistentService persistentConfig;
     private Config config;
     private JPanel contentPanel = new JBPanel<>();
     private JPanel btnPanel = new JBPanel<>();
@@ -50,7 +50,7 @@ public class UserUI extends JFrame {
     public UserUI(String driverClass, String address, AnActionEvent anActionEvent, Config config) throws HeadlessException {
         this.anActionEvent = anActionEvent;
         this.project = anActionEvent.getData(PlatformDataKeys.PROJECT);
-        this.persistentConfig = PersistentConfig.getInstance(project);
+        this.persistentConfig = PersistentService.getInstance(project);
         this.config = config;
         setTitle("input the username and password of database");
         //设置大小
@@ -115,7 +115,7 @@ public class UserUI extends JFrame {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    private void onOK(String driverClass, String address, PersistentConfig persistentConfig, Project project) {
+    private void onOK(String driverClass, String address, PersistentService persistentConfig, Project project) {
         try {
             Connection conn = null;
             String dbTypeName = "";
@@ -125,7 +125,7 @@ public class UserUI extends JFrame {
                     Class.forName(DbType.Oracle.getDriverClass());
                 } else if (driverClass.contains("mysql")) {
                     dbTypeName = "mysql";
-                    if (!config.fetchFeatureCheckBox(ExtendFeatureEnum.USE_MYSQL8).isSelected()) {
+                    if (!config.isSelected(ExtendFeatureEnum.USE_MYSQL8)) {
                         Class.forName(DbType.MySQL.getDriverClass());
                     } else {
                         Class.forName(DbType.MySQL_8.getDriverClass());
