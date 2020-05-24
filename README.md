@@ -1,36 +1,45 @@
-better-mybatis-generator idea plugin
+Mybatis Generator Plugin (IDEA Plugin)
 ====
-插件功能：在idea的database工具中使用，选择表（一或n,建议n小于10），生成mybatis相关的代码，(包括:dao、example、domain、xml)。<br>
-Use in idea database tool，right click table(one or more) to generate mybatis files (include:dao、example、domain、xml).<br>
 
-Plugin Installation：
+本插件基于<a href="https://github.com/kmaster/better-mybatis-generator"> better-mybatis-generator </a>二次开发而成. 
+在原有功能的基础上增加了对批量插入, JavaDoc注释, @Mapper注解, 方法命名 等做了改造, 使之符合团队的规范要求.
+
+改造点:
+------
+1. 增加类注释, @author(作者信息), @since(生成时间)支持
+2. 增加 @Mapper, @Getter, @Setter, @ToString 注解支持
+3. 增加对 batchInsert 方法的支持
+4. 支持将方法命名风格从 xxxByPrimaryKey 改为 xxxById
+5. 重构代码, 使之对二次开发更友好
+
+
+插件安装：
 -------
-- 在idea插件系统里安装 | Using IDE built-in plugin system on Windows:
-  - <kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Plugins</kbd> > <kbd>Browse repositories...</kbd> > <kbd>Search for "better-mybatis-generator"</kbd> > <kbd>Install Plugin</kbd>
-- 手动zip安装 | Manually:
-  - Download the [latest release](https://plugins.jetbrains.com/plugin/11021-better-mybatis-generator) and install it manually using <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
+- 手动zip安装:
+  - 下载 [最新发布版本](https://github.com/chxj1992/mybatis-generator-plugin/raw/master/mybatis-generator-plugin.zip)        
+  - 手动安装: <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Install plugin from disk...</kbd>
 
-Using sample screenshots：
+截图：
 -------
-#1、设置自定义默认配置，若不设置，则使用程序默认配置。 | Set custom default configuration，If not, use the program default configuration.<br>
-![image](https://github.com/kmaster/better-mybatis-generator/blob/master/image/1.png)<br>
+#1. 设置默认配置 <br>
+![image](image/1.png)<br>
 
-#2、配置数据库 | Connecting to Your Database.<br>
-![image](https://github.com/kmaster/better-mybatis-generator/blob/master/image/2.png)<br>
-![image](https://github.com/kmaster/better-mybatis-generator/blob/master/image/3.png)<br>
-![image](https://github.com/kmaster/better-mybatis-generator/blob/master/image/4.png)<br>
+#2. 配置数据库 <br>
+![image](image/2.png)<br>
+![image](image/3.png)<br>
+![image](image/4.png)<br>
 
-#3、在需要生成代码的表上右键，选择mybatis generate，打开预览界面。 | Select one or more tables,right click and select <kbd>mybatis generate</kbd> to open generatoe main UI. <br>
-![image](https://github.com/kmaster/better-mybatis-generator/blob/master/image/5.png)<br>
+#3. 在需要生成代码的表上右键, 选择 mybatis generator，打开预览界面 <br>
+![image](image/5.png)<br>
 
-#4、设置确认完成后，点击ok，开始生产代码。 | Check configuration in main ui,click ok.<br>
-![image](https://github.com/kmaster/better-mybatis-generator/blob/master/image/6.png)<br>
+#4. 设置确认完成后, 点击 `GENERATE!` 开始生成代码<br>
+![image](image/6.png)<br>
 
-#5、首次使用此插件，需要为插件提供数据库账号密码。 | Provide account and password for the first time. <br>
-![image](https://github.com/kmaster/better-mybatis-generator/blob/master/image/7.png)<br>
+#5. 首次使用此插件, 需要为插件提供数据库账号密码 <br>
+![image](image/7.png)<br>
 
-#6、检查生成的代码文件 | Generate work finish,Check your files.<br>
-![image](https://github.com/kmaster/better-mybatis-generator/blob/master/image/8.png)<br>
+#6、检查生成的代码文件<br>
+![image](image/8.png)<br>
 
 
 如何在本地运行/调试此插件 | How to run/debug plugin ：
