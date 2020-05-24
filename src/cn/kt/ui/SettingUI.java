@@ -10,7 +10,6 @@ import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.psi.PsiPackage;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
-import com.intellij.ui.components.JBTextField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,21 +28,13 @@ public class SettingUI extends JDialog implements Configurable {
 
     private JPanel mainPanel = new JBPanel<>(new GridLayout(2, 1));
 
-    private JTextField tableNameField = new JTextField(10);
-    private JBTextField modelPackageField = new JBTextField(12);
-    private JBTextField daoPackageField = new JBTextField(12);
-    private JTextField mapperNameField = new JTextField(10);
-    private JTextField domainNameField = new JTextField(10);
-    private JTextField keyField = new JTextField(12);
-    private JTextField authorField = new JTextField(10);
-
     private PersistentService persistentConfig;
     private Config config;
+
 
     public SettingUI() {
         setContentPane(mainPanel);
     }
-
 
     public void createUI(Project project) {
         String projectFolder = project.getBasePath();
@@ -83,9 +74,9 @@ public class SettingUI extends JDialog implements Configurable {
         JPanel paneRight1 = new JPanel();
         paneRight1.setLayout(new FlowLayout(FlowLayout.LEFT));
         paneRight1.add(new JLabel("model name : "));
-        domainNameField.setText("eg. dbTable");
-        domainNameField.setEnabled(false);
-        paneRight1.add(domainNameField);
+        modelNameField.setText("eg. dbTable");
+        modelNameField.setEnabled(false);
+        paneRight1.add(modelNameField);
         JPanel paneRight2 = new JPanel();
         paneRight2.setLayout(new FlowLayout(FlowLayout.LEFT));
         paneRight2.add(new JLabel("dao postfix : "));

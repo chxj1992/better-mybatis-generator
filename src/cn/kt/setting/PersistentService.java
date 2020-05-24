@@ -11,6 +11,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -23,7 +24,7 @@ public class PersistentService implements PersistentStateComponent<PersistentSer
 
     private Map<String, Config> initConfig;
     private Map<String, User> users;
-    private Map<String, Config> historyConfigList;
+    private Map<String, Config> historyConfigList = new HashMap<>();
 
     @Nullable
     public static PersistentService getInstance(Project project) {

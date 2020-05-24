@@ -17,6 +17,15 @@ import java.awt.*;
  */
 public interface Configurable {
 
+
+    JTextField tableNameField = new JTextField(10);
+    JBTextField modelPackageField = new JBTextField(12);
+    JBTextField daoPackageField = new JBTextField(12);
+    JTextField mapperNameField = new JTextField(10);
+    JTextField modelNameField = new JTextField(10);
+    JTextField keyField = new JTextField(12);
+    JTextField authorField = new JTextField(10);
+
     TextFieldWithBrowseButton projectFolderBtn = new TextFieldWithBrowseButton();
     TextFieldWithBrowseButton modelFolderBtn = new TextFieldWithBrowseButton();
     TextFieldWithBrowseButton daoFolderBtn = new TextFieldWithBrowseButton();

@@ -240,9 +240,6 @@ public class Generate {
      */
     private void saveConfig() {
         Map<String, Config> historyConfigList = persistentConfig.getHistoryConfigList();
-        if (historyConfigList == null) {
-            historyConfigList = new HashMap<>();
-        }
 
         String daoName = config.getMapperName();
         String modelName = config.getModelName();

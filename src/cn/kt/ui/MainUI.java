@@ -23,7 +23,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
 import java.util.Map;
 
 import static cn.kt.constant.Constant.INIT_CONFIG_KEY;
@@ -42,15 +41,6 @@ public class MainUI extends JFrame implements Configurable {
     private PsiElement[] psiElements;
     private Config config;
 
-    private JTextField tableNameField = new JTextField(10);
-    private JBTextField modelPackageField = new JBTextField(12);
-    private JBTextField daoPackageField = new JBTextField(12);
-    private JTextField mapperNameField = new JTextField(10);
-    private JTextField modelNameField = new JTextField(10);
-    private JTextField keyField = new JTextField(10);
-    private JTextField authorField = new JTextField(10);
-
-
     public MainUI(AnActionEvent anActionEvent) throws HeadlessException {
         this.anActionEvent = anActionEvent;
         this.project = anActionEvent.getData(PlatformDataKeys.PROJECT);
@@ -58,6 +48,7 @@ public class MainUI extends JFrame implements Configurable {
         this.psiElements = anActionEvent.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
 
         Map<String, Config> initConfigMap = persistentConfig.getInitConfig();
+
         Map<String, Config> historyConfigList = persistentConfig.getHistoryConfigList();
 
         config = new Config();
@@ -89,10 +80,6 @@ public class MainUI extends JFrame implements Configurable {
                 config = initConfigMap.get(INIT_CONFIG_KEY);
             }
         } else {
-            //单表时，优先使用已经存在的配置
-            if (historyConfigList == null) {
-                historyConfigList = new HashMap<>();
-            }
             if (historyConfigList.containsKey(tableName)) {
                 config = historyConfigList.get(tableName);
             } else if (initConfigMap != null) {
@@ -335,6 +322,8 @@ public class MainUI extends JFrame implements Configurable {
         JButton buttonCancel = new JButton("CLOSE");
         paneBottom.add(buttonCancel);
 
+
+
         JPanel panelLeft = new JPanel();
         panelLeft.setLayout(new BoxLayout(panelLeft, BoxLayout.Y_AXIS));
         //采用x布局时，添加固定宽度组件隔开
@@ -345,9 +334,6 @@ public class MainUI extends JFrame implements Configurable {
         panelLeft.setBorder(historyBorder);
         panelLeft.setPreferredSize(new Dimension(250, 650));
 
-        if (historyConfigList == null) {
-            historyConfigList = new HashMap<>();
-        }
         for (String historyConfigName : historyConfigList.keySet()) {
             defaultListModel.addElement(historyConfigName);
         }
