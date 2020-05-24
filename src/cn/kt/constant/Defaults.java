@@ -12,4 +12,7 @@ public class Defaults {
 
 	public final static String DEFAULT_XML_PATH = "src/main/java";
 
+	public final static String DEFAULT_MAPPER_POSTFIX = "Mapper";
+
+
 }

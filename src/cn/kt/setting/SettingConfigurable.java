@@ -72,7 +72,6 @@ public class SettingConfigurable implements SearchableConfigurable {
 
     @Override
     public void reset() {
-        mainPanel.reset();
     }
 
     @Override

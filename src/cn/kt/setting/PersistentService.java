@@ -1,7 +1,9 @@
 package cn.kt.setting;
 
 import cn.kt.model.Config;
+import cn.kt.model.TableInfo;
 import cn.kt.model.User;
+import cn.kt.util.StringUtils;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
@@ -14,17 +16,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cn.kt.constant.Defaults.*;
+
 
 /**
  * 配置持久化
+ *
  * @author chenxiaojing
  */
 @State(name = "PersistentService", storages = {@Storage("mybatis-generator-config.xml")})
 public class PersistentService implements PersistentStateComponent<PersistentService> {
 
-    private Map<String, Config> initConfig;
+    private final static String INIT_CONFIG_NAME = "_INIT_";
+
+    private Config initConfig;
     private Map<String, User> users;
-    private Map<String, Config> historyConfigList = new HashMap<>();
+    private Map<String, Config> historyConfigMap;
 
     @Nullable
     public static PersistentService getInstance(Project project) {
@@ -43,11 +50,36 @@ public class PersistentService implements PersistentStateComponent<PersistentSer
     }
 
 
-    public Map<String, Config> getInitConfig() {
+    public Config getInitConfig(TableInfo tableInfo, String projectFolder) {
+        if (initConfig == null) {
+            initConfig = new Config();
+            initConfig.setName(INIT_CONFIG_NAME);
+            initConfig.setMapperPostfix(DEFAULT_MAPPER_POSTFIX);
+
+            initConfig.setModelPackage(DEFAULT_PACKAGE_NAME);
+            initConfig.setMapperPackage(DEFAULT_PACKAGE_NAME);
+
+            initConfig.setProjectFolder(projectFolder);
+            initConfig.setModelTargetFolder(projectFolder);
+            initConfig.setMapperTargetFolder(projectFolder);
+            initConfig.setXmlTargetFolder(projectFolder);
+
+            initConfig.setModelPath(DEFAULT_JAVA_PATH);
+            initConfig.setMapperPath(DEFAULT_JAVA_PATH);
+            initConfig.setXmlPath(DEFAULT_XML_PATH);
+        }
+        if (tableInfo != null) {
+            initConfig.setTableName(tableInfo.getTableName());
+            initConfig.setModelName(StringUtils.dbStringToCamelStyle(tableInfo.getTableName()));
+            initConfig.setMapperName(initConfig.getModelName() + DEFAULT_MAPPER_POSTFIX);
+            if (tableInfo.getPrimaryKeys().size() > 0) {
+                initConfig.setPrimaryKey(tableInfo.getPrimaryKeys().get(0));
+            }
+        }
         return initConfig;
     }
 
-    public void setInitConfig(Map<String, Config> initConfig) {
+    public void setInitConfig(Config initConfig) {
         this.initConfig = initConfig;
     }
 
@@ -59,11 +91,11 @@ public class PersistentService implements PersistentStateComponent<PersistentSer
         this.users = users;
     }
 
-    public Map<String, Config> getHistoryConfigList() {
-        return historyConfigList;
+    public Map<String, Config> getHistoryConfigMap() {
+        if (historyConfigMap == null) {
+            historyConfigMap = new HashMap<>();
+        }
+        return historyConfigMap;
     }
 
-    public void setHistoryConfigList(Map<String, Config> historyConfigList) {
-        this.historyConfigList = historyConfigList;
-    }
 }

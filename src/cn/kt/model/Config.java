@@ -164,7 +164,6 @@ public class Config {
 		this.xmlTargetFolder = xmlTargetFolder;
 	}
 
-
 	public String getMapperName() {
 		return mapperName;
 	}

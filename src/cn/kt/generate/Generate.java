@@ -4,7 +4,6 @@ import static cn.kt.constant.Defaults.DEFAULT_PACKAGE_NAME;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +106,7 @@ public class Generate {
         this.persistentConfig = PersistentService.getInstance(project);
 
         //执行前 先保存一份当前配置
-        saveConfig();
+        persistentConfig.getHistoryConfigMap().put(config.getName(), config);
 
         PsiElement[] psiElements = anActionEvent.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
 
@@ -188,8 +187,7 @@ public class Generate {
                     }
                     catch (Exception e) {
                         // Messages.showMessageDialog(e.getMessage() + " if use mysql,check version8?", "Generate failure", Messages.getInformationIcon());
-                        System.out.println("代码生成报错");
-
+                        System.out.println("代码生成报错 : " + e.getMessage());
                     }
                     project.getBaseDir().refresh(false, true);
                 }
@@ -239,15 +237,6 @@ public class Generate {
      * 保存当前配置到历史记录
      */
     private void saveConfig() {
-        Map<String, Config> historyConfigList = persistentConfig.getHistoryConfigList();
-
-        String daoName = config.getMapperName();
-        String modelName = config.getModelName();
-        String daoPostfix = daoName.replace(modelName, "");
-        config.setMapperPostfix(daoPostfix);
-
-        historyConfigList.put(config.getName(), config);
-        persistentConfig.setHistoryConfigList(historyConfigList);
 
     }
 

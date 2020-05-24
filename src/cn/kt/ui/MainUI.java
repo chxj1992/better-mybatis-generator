@@ -4,37 +4,32 @@ import cn.kt.generate.Generate;
 import cn.kt.model.Config;
 import cn.kt.model.TableInfo;
 import cn.kt.setting.PersistentService;
-import cn.kt.util.JTextFieldHintListener;
 import cn.kt.util.StringUtils;
 import com.intellij.database.psi.DbTable;
-import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPackage;
-import com.intellij.ui.components.*;
+import com.intellij.ui.components.JBList;
+import com.intellij.ui.components.JBPanel;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Map;
-
-import static cn.kt.constant.Constant.INIT_CONFIG_KEY;
-import static cn.kt.constant.Defaults.*;
 
 /**
  * 插件主界面
  * Created by kangtian on 2018/8/1.
  */
 public class MainUI extends JFrame implements Configurable {
-
-    private final String DEFAULT_MAPPER_POSTFIX = "Mapper";
 
     private AnActionEvent anActionEvent;
     private Project project;
@@ -47,48 +42,27 @@ public class MainUI extends JFrame implements Configurable {
         PersistentService persistentConfig = PersistentService.getInstance(project);
         this.psiElements = anActionEvent.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
 
-        Map<String, Config> initConfigMap = persistentConfig.getInitConfig();
-
-        Map<String, Config> historyConfigList = persistentConfig.getHistoryConfigList();
-
-        config = new Config();
         setTitle("mybatis generate tool");
         // 设置大小
-        setPreferredSize(new Dimension(1200, 700));
+        setPreferredSize(new Dimension(1200, 800));
         // 设置位置
         setLocation(120, 100);
         pack();
         setVisible(true);
-        JButton buttonOk = new JButton("OK");
-        getRootPane().setDefaultButton(buttonOk);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         PsiElement psiElement = psiElements[0];
         TableInfo tableInfo = new TableInfo((DbTable) psiElement);
-        String tableName = tableInfo.getTableName();
-
-        String primaryKey = "";
-        if (tableInfo.getPrimaryKeys().size() > 0) {
-            primaryKey = tableInfo.getPrimaryKeys().get(0);
-        }
         String projectFolder = project.getBasePath();
 
+        Map<String, Config> historyConfigMap = persistentConfig.getHistoryConfigMap();
 
         if (psiElements.length > 1) {
             //多表时，只使用默认配置
-            if (initConfigMap != null) {
-                config = initConfigMap.get(INIT_CONFIG_KEY);
-            }
+            config = persistentConfig.getInitConfig(tableInfo, projectFolder);
         } else {
-            if (historyConfigList.containsKey(tableName)) {
-                config = historyConfigList.get(tableName);
-            } else if (initConfigMap != null) {
-                config = initConfigMap.get(INIT_CONFIG_KEY);
-            }
+            config = historyConfigMap.getOrDefault(tableInfo.getTableName(), persistentConfig.getInitConfig(tableInfo, projectFolder));
         }
-
-        String modelName = StringUtils.isEmpty(config.getModelName()) ? StringUtils.dbStringToCamelStyle(tableName) : config.getModelName();
-        String mapperName = StringUtils.isEmpty(config.getMapperName()) ? (StringUtils.isEmpty(config.getMapperPostfix()) ? modelName + DEFAULT_MAPPER_POSTFIX : modelName + config.getMapperPostfix()) : config.getMapperName();
 
         JPanel contentPanel = new JBPanel<>();
         contentPanel.setBorder(JBUI.Borders.empty(5));
@@ -96,260 +70,90 @@ public class MainUI extends JFrame implements Configurable {
 
         //主要设置显示在这里
         JPanel paneMain = new JPanel(new GridLayout(2, 1, 3, 3));
-        JPanel paneMainTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        paneMainTop.setBorder(JBUI.Borders.empty(10, 30, 5, 40));
 
-        JPanel paneMainTop1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel paneMainTop2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel paneMainTop3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel paneMainTop4 = new JPanel(new GridLayout(4, 1, 3, 3));
-        paneMainTop.add(paneMainTop1);
-        paneMainTop.add(paneMainTop2);
-        paneMainTop.add(paneMainTop3);
-        paneMainTop.add(paneMainTop4);
+        JPanel basicPanel = createBasicPanel(project, false);
+        fillBasicPanel(config, false);
 
-        JPanel paneLeft0 = new JPanel();
-        paneLeft0.setLayout(new FlowLayout(FlowLayout.LEFT));
-        paneLeft0.add(new JLabel("author : "));
-        authorField.setText("");
-        authorField.setEnabled(true);
-        paneLeft0.add(authorField);
+        JBPanel featurePanel = createFeaturePanel(config);
 
-        if (config != null && !StringUtils.isEmpty(config.getAuthor())) {
-            authorField.setText(config.getAuthor());
-        }
+        paneMain.add(basicPanel);
+        paneMain.add(featurePanel);
 
-        JPanel paneLeft1 = new JPanel();
-        paneLeft1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JLabel tablejLabel = new JLabel("table name : ");
-        tablejLabel.setSize(new Dimension(20, 30));
-        paneLeft1.add(tablejLabel);
-        if (psiElements.length > 1) {
-            tableNameField.addFocusListener(new JTextFieldHintListener(tableNameField, "eg. db_table"));
-        } else {
-            tableNameField.setText(tableName);
-        }
-        paneLeft1.add(tableNameField);
+        JPanel btnPanel = createBtnPanel();
 
-        JPanel paneLeft2 = new JPanel();
-        paneLeft2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        paneLeft2.add(new JLabel("主键(选填) : "));
-        if (psiElements.length > 1) {
-            keyField.addFocusListener(new JTextFieldHintListener(keyField, "eg. primary key"));
-        } else {
-            keyField.setText(primaryKey);
-        }
-        paneLeft2.add(keyField);
+        JPanel historySelectorPanel = createHistorySelectorPanel(historyConfigMap);
 
-        JPanel paneRight1 = new JPanel();
-        paneRight1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        paneRight1.add(new JLabel("model : "));
-        if (psiElements.length > 1) {
-            modelNameField.addFocusListener(new JTextFieldHintListener(modelNameField, "eg. DbTable"));
-        } else {
-            modelNameField.setText(modelName);
-        }
-        paneRight1.add(modelNameField);
+        contentPanel.add(paneMain, BorderLayout.CENTER);
+        contentPanel.add(historySelectorPanel, BorderLayout.WEST);
+        contentPanel.add(btnPanel, BorderLayout.SOUTH);
 
-        JPanel paneRight2 = new JPanel();
-        paneRight2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        paneRight2.add(new JLabel("mapper name : "));
-        if (psiElements.length > 1) {
-            if (config != null && !StringUtils.isEmpty(config.getMapperPostfix())) {
-                mapperNameField.addFocusListener(new JTextFieldHintListener(mapperNameField, "eg. DbTable" + config.getMapperPostfix()));
-            } else {
-                mapperNameField.addFocusListener(new JTextFieldHintListener(mapperNameField, "eg. DbTable" + DEFAULT_MAPPER_POSTFIX));
-            }
-        } else {
-            mapperNameField.setText(mapperName);
-        }
+        setContentPane(contentPanel);
 
-        paneRight2.add(mapperNameField);
-
-        paneMainTop1.add(paneLeft0);
-        paneMainTop1.add(paneLeft1);
-        paneMainTop1.add(paneLeft2);
-        paneMainTop2.add(paneRight1);
-        paneMainTop2.add(paneRight2);
-
-        JPanel modelPackagePanel = new JPanel();
-        modelPackagePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JBLabel labelLeft4 = new JBLabel("model package : ");
-        modelPackagePanel.add(labelLeft4);
-        if (config != null && !StringUtils.isEmpty(config.getModelPackage())) {
-            modelPackageField.setText(config.getModelPackage());
-        } else {
-            modelPackageField.setText(DEFAULT_PACKAGE_NAME);
-        }
-        modelPackagePanel.add(modelPackageField);
-        JButton packageBtn1 = new JButton("...");
-        packageBtn1.addActionListener(actionEvent -> {
-            final PackageChooserDialog chooser = new PackageChooserDialog("choose model package", project);
-            chooser.selectPackage(modelPackageField.getText());
-            chooser.show();
-            final PsiPackage psiPackage = chooser.getSelectedPackage();
-            String packageName = psiPackage == null ? null : psiPackage.getQualifiedName();
-            modelPackageField.setText(packageName);
-            MainUI.this.toFront();
-        });
-        modelPackagePanel.add(packageBtn1);
-
-        JPanel daoPackagePanel = new JPanel();
-        daoPackagePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JLabel labelLeft5 = new JLabel("mapper package : ");
-        daoPackagePanel.add(labelLeft5);
-
-        if (config != null && !StringUtils.isEmpty(config.getMapperPackage())) {
-            daoPackageField.setText(config.getMapperPackage());
-        } else {
-            daoPackageField.setText(DEFAULT_PACKAGE_NAME);
-        }
-        daoPackagePanel.add(daoPackageField);
-
-        JButton packageBtn2 = new JButton("...");
-        packageBtn2.addActionListener(actionEvent -> {
-            final PackageChooserDialog chooser = new PackageChooserDialog("choose mapper package", project);
-            chooser.selectPackage(daoPackageField.getText());
-            chooser.show();
-            final PsiPackage psiPackage = chooser.getSelectedPackage();
-            String packageName = psiPackage == null ? null : psiPackage.getQualifiedName();
-            daoPackageField.setText(packageName);
-            MainUI.this.toFront();
-        });
-        daoPackagePanel.add(packageBtn2);
-
-        paneMainTop3.add(modelPackagePanel);
-        paneMainTop3.add(daoPackagePanel);
-
-        JPanel projectFolderPanel = new JPanel();
-        projectFolderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JLabel projectLabel = new JLabel("project folder : ");
-        projectFolderPanel.add(projectLabel);
-        projectFolderBtn.setTextFieldPreferredWidth(45);
-        if (config != null && !StringUtils.isEmpty(config.getProjectFolder())) {
-            projectFolderBtn.setText(config.getProjectFolder());
-        } else {
-            projectFolderBtn.setText(projectFolder);
-        }
-        projectFolderBtn.addBrowseFolderListener(new TextBrowseFolderListener(FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor()) {
+        addWindowListener(new WindowAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                super.actionPerformed(e);
-                projectFolderBtn.setText(projectFolderBtn.getText().replaceAll("\\\\", "/"));
+            public void windowClosing(WindowEvent e) {
+                onClose();
             }
         });
-        projectFolderPanel.add(projectFolderBtn);
-        projectFolderPanel.add(setProjectBtn);
 
+        contentPanel.registerKeyboardAction(e -> onClose(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    }
 
-        JPanel modelFolderPanel = new JPanel();
-        modelFolderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        modelFolderPanel.add(new JLabel("model folder : "));
+    /**
+     * 底部按钮栏
+     *
+     * @return
+     */
+    @NotNull
+    private JPanel createBtnPanel() {
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JButton generateBtn = new JButton("GENERATE!");
+        getRootPane().setDefaultButton(generateBtn);
+        bottomPanel.add(generateBtn);
+        JButton closeBtn = new JButton("CLOSE");
+        bottomPanel.add(closeBtn);
 
-        modelFolderBtn.setTextFieldPreferredWidth(45);
-        if (config != null && !StringUtils.isEmpty(config.getModelTargetFolder())) {
-            modelFolderBtn.setText(config.getModelTargetFolder());
-        } else {
-            modelFolderBtn.setText(projectFolder);
-        }
-        modelFolderBtn.addBrowseFolderListener(new TextBrowseFolderListener(FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor()) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                super.actionPerformed(e);
-                modelFolderBtn.setText(modelFolderBtn.getText().replaceAll("\\\\", "/"));
-            }
-        });
-        modelFolderPanel.add(modelFolderBtn);
-        modelFolderPanel.add(new JLabel("package path : "));
-        modelPathField.setText(DEFAULT_JAVA_PATH);
-        modelFolderPanel.add(modelPathField);
+        generateBtn.addActionListener(e -> onGenerate());
+        closeBtn.addActionListener(e -> onClose());
+        return bottomPanel;
+    }
 
-
-        JPanel daoFolderPanel = new JPanel();
-        daoFolderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        daoFolderPanel.add(new JLabel("mapper folder : "));
-        daoFolderBtn.setTextFieldPreferredWidth(45);
-        if (config != null && !StringUtils.isEmpty(config.getMapperTargetFolder())) {
-            daoFolderBtn.setText(config.getMapperTargetFolder());
-        } else {
-            daoFolderBtn.setText(projectFolder);
-        }
-        daoFolderBtn.addBrowseFolderListener(new TextBrowseFolderListener(FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor()) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                super.actionPerformed(e);
-                daoFolderBtn.setText(daoFolderBtn.getText().replaceAll("\\\\", "/"));
-            }
-        });
-        daoFolderPanel.add(daoFolderBtn);
-        daoFolderPanel.add(new JLabel("package path : "));
-        mapperPathField.setText(DEFAULT_JAVA_PATH);
-        daoFolderPanel.add(mapperPathField);
-
-
-        JPanel xmlFolderPanel = new JPanel();
-        xmlFolderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        xmlFolderPanel.add(new JLabel("xml folder : "));
-
-        xmlFolderBtn.setTextFieldPreferredWidth(45);
-        if (config != null && !StringUtils.isEmpty(config.getXmlTargetFolder())) {
-            xmlFolderBtn.setText(config.getXmlTargetFolder());
-        } else {
-            xmlFolderBtn.setText(projectFolder);
-        }
-
-        xmlFolderBtn.addBrowseFolderListener(new TextBrowseFolderListener(FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor()) {
-        });
-        xmlFolderPanel.add(xmlFolderBtn);
-        xmlFolderPanel.add(new JLabel("package path : "));
-        xmlPathField.setText(DEFAULT_XML_PATH);
-        xmlFolderPanel.add(xmlPathField);
-
-        paneMainTop4.add(projectFolderPanel);
-        paneMainTop4.add(modelFolderPanel);
-        paneMainTop4.add(daoFolderPanel);
-        paneMainTop4.add(xmlFolderPanel);
-
-        paneMain.add(paneMainTop);
-
-        JBPanel paneMainDown = buildPanelDown(config);
-        paneMain.add(paneMainDown);
-
-        //确认和关闭按钮
-        JPanel paneBottom = new JPanel();
-        paneBottom.setLayout(new FlowLayout(2));
-        paneBottom.add(buttonOk);
-        JButton buttonCancel = new JButton("CLOSE");
-        paneBottom.add(buttonCancel);
-
-
-
-        JPanel panelLeft = new JPanel();
-        panelLeft.setLayout(new BoxLayout(panelLeft, BoxLayout.Y_AXIS));
+    /**
+     * 左侧历史配置栏
+     *
+     * @param historyConfigMap
+     * @return
+     */
+    @NotNull
+    private JPanel createHistorySelectorPanel(Map<String, Config> historyConfigMap) {
+        JPanel historySelectorPanel = new JPanel();
+        historySelectorPanel.setLayout(new BoxLayout(historySelectorPanel, BoxLayout.Y_AXIS));
         //采用x布局时，添加固定宽度组件隔开
         this.getContentPane().add(Box.createVerticalStrut(10));
         final DefaultListModel<String> defaultListModel = new DefaultListModel<>();
 
         Border historyBorder = BorderFactory.createTitledBorder("history config : ");
-        panelLeft.setBorder(historyBorder);
-        panelLeft.setPreferredSize(new Dimension(250, 650));
+        historySelectorPanel.setBorder(historyBorder);
+        historySelectorPanel.setPreferredSize(new Dimension(250, 650));
 
-        for (String historyConfigName : historyConfigList.keySet()) {
+        for (String historyConfigName : historyConfigMap.keySet()) {
             defaultListModel.addElement(historyConfigName);
         }
-        Map<String, Config> finalHistoryConfigList = historyConfigList;
 
-        final JBList<String> fruitList = new JBList<>(defaultListModel);
-        fruitList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        fruitList.setSelectedIndex(0);
-        fruitList.setVisibleRowCount(25);
-        JBScrollPane scrollPanel = new JBScrollPane(fruitList);
-        panelLeft.add(scrollPanel);
+        final JBList<String> historyJBList = new JBList<>(defaultListModel);
+        historyJBList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        historyJBList.setSelectedIndex(0);
+        historyJBList.setVisibleRowCount(25);
+        JBScrollPane scrollPanel = new JBScrollPane(historyJBList);
+        historySelectorPanel.add(scrollPanel);
 
-        fruitList.addListSelectionListener(e ->{
-            String configName = fruitList.getSelectedValue();
-            Config selectedConfig = finalHistoryConfigList.get(configName);
-            fillView(selectedConfig);
+        historyJBList.addListSelectionListener(e -> {
+            String configName = historyJBList.getSelectedValue();
+            Config selectedConfig = historyConfigMap.get(configName);
+            if (selectedConfig != null) {
+                fillView(selectedConfig);
+            }
         });
 
         JPanel btnPanel = new JPanel();
@@ -359,75 +163,41 @@ public class MainUI extends JFrame implements Configurable {
         btnPanel.add(deleteConfigBtn);
 
         deleteConfigBtn.addActionListener(e -> {
-            finalHistoryConfigList.remove(fruitList.getSelectedValue());
-            defaultListModel.removeElement(fruitList.getSelectedValue());
+            historyConfigMap.remove(historyJBList.getSelectedValue());
+            defaultListModel.removeElement(historyJBList.getSelectedValue());
             scrollPanel.updateUI();
         });
 
-        panelLeft.add(btnPanel);
-
-        contentPanel.add(paneMain, BorderLayout.CENTER);
-        contentPanel.add(paneBottom, BorderLayout.SOUTH);
-        contentPanel.add(panelLeft, BorderLayout.WEST);
-
-        setContentPane(contentPanel);
-
-        setProjectBtn.addActionListener(e -> {
-            modelFolderBtn.setText(projectFolderBtn.getText());
-            daoFolderBtn.setText(projectFolderBtn.getText());
-            xmlFolderBtn.setText(projectFolderBtn.getText());
-        });
-
-        buttonOk.addActionListener(e -> onOK());
-
-        buttonCancel.addActionListener(e -> onCancel());
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-        contentPanel.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        historySelectorPanel.add(btnPanel);
+        return historySelectorPanel;
     }
 
     /**
      * 填充视图
+     *
      * @param selectedConfig
      */
     private void fillView(Config selectedConfig) {
-        authorField.setText(selectedConfig.getAuthor());
-        tableNameField.setText(selectedConfig.getTableName());
-        keyField.setText(selectedConfig.getPrimaryKey());
-        modelNameField.setText(selectedConfig.getModelName());
-        mapperNameField.setText(selectedConfig.getMapperName());
-        modelPackageField.setText(selectedConfig.getModelPackage());
-        daoPackageField.setText(selectedConfig.getMapperPackage());
-        projectFolderBtn.setText(selectedConfig.getProjectFolder());
-        modelFolderBtn.setText(selectedConfig.getModelTargetFolder());
-        daoFolderBtn.setText(selectedConfig.getMapperTargetFolder());
-        xmlFolderBtn.setText(selectedConfig.getXmlTargetFolder());
+        AUTHOR_FIELD.setText(selectedConfig.getAuthor());
+        TABLE_NAME_FIELD.setText(selectedConfig.getTableName());
+        PRIMARY_KEY_FIELD.setText(selectedConfig.getPrimaryKey());
+        MODEL_NAME_FIELD.setText(selectedConfig.getModelName());
+        MAPPER_NAME_FIELD.setText(selectedConfig.getMapperName());
+        MODEL_PACKAGE_FIELD.setText(selectedConfig.getModelPackage());
+        MAPPER_PACKAGE_FIELD.setText(selectedConfig.getMapperPackage());
+        PROJECT_FOLDER_BTN.setText(selectedConfig.getProjectFolder());
+        MODEL_FOLDER_BTN.setText(selectedConfig.getModelTargetFolder());
+        MAPPER_FOLDER_BTN.setText(selectedConfig.getMapperTargetFolder());
+        XML_FOLDER_BTN.setText(selectedConfig.getXmlTargetFolder());
     }
 
-    private void onOK() {
+    private void onGenerate() {
         try {
             dispose();
 
             if (psiElements.length == 1) {
-                Config generatorConfig = new Config();
-                generatorConfig.setName(tableNameField.getText());
-                generatorConfig.setTableName(tableNameField.getText());
-                generatorConfig.setMapperName(mapperNameField.getText());
-                generatorConfig.setModelName(modelNameField.getText());
-                generatorConfig.setPrimaryKey(keyField.getText());
-
-                fillBasicConfig(generatorConfig);
-                fillOtherConfig(generatorConfig);
-                generatorConfig.setFeatureMap(config.getFeatureMap());
-
-                new Generate(generatorConfig).execute(anActionEvent);
-
+                Config generatedConfig = generateConfig();
+                new Generate(generatedConfig).execute(anActionEvent);
             } else {
                 for (PsiElement psiElement : psiElements) {
                     TableInfo tableInfo = new TableInfo((DbTable) psiElement);
@@ -438,22 +208,32 @@ public class MainUI extends JFrame implements Configurable {
                         primaryKey = tableInfo.getPrimaryKeys().get(0);
                     }
 
-                    Config generatorConfig = new Config();
-                    generatorConfig.setName(tableName);
-                    generatorConfig.setTableName(tableName);
-                    if (this.config != null) {
-                        generatorConfig.setMapperName(modelName + this.config.getMapperPostfix());
-                    } else {
-                        generatorConfig.setMapperName(modelName + DEFAULT_MAPPER_POSTFIX);
-                    }
-                    generatorConfig.setModelName(modelName);
-                    generatorConfig.setPrimaryKey(primaryKey);
+                    Config generatedConfig = new Config();
 
-                    fillBasicConfig(generatorConfig);
-                    fillOtherConfig(generatorConfig);
-                    generatorConfig.setFeatureMap(config.getFeatureMap());
+                    generatedConfig.setName(tableName);
+                    generatedConfig.setAuthor(config.getAuthor());
+                    generatedConfig.setTableName(tableName);
+                    generatedConfig.setPrimaryKey(primaryKey);
 
-                    new Generate(generatorConfig).execute(anActionEvent);
+                    generatedConfig.setModelName(modelName);
+                    generatedConfig.setMapperName(modelName + config.getMapperPostfix());
+                    generatedConfig.setMapperPostfix(config.getMapperPostfix());
+
+                    generatedConfig.setModelPackage(config.getModelPackage());
+                    generatedConfig.setMapperPackage(config.getMapperPackage());
+
+                    generatedConfig.setModelPath(config.getModelPath());
+                    generatedConfig.setMapperPath(config.getMapperPath());
+                    generatedConfig.setXmlPath(config.getXmlPath());
+
+                    generatedConfig.setProjectFolder(config.getProjectFolder());
+                    generatedConfig.setModelTargetFolder(config.getModelTargetFolder());
+                    generatedConfig.setMapperTargetFolder(config.getMapperTargetFolder());
+                    generatedConfig.setXmlTargetFolder(config.getXmlTargetFolder());
+
+                    generatedConfig.setFeatureMap(config.getFeatureMap());
+
+                    new Generate(generatedConfig).execute(anActionEvent);
                 }
             }
         } catch (Exception e1) {
@@ -463,24 +243,40 @@ public class MainUI extends JFrame implements Configurable {
         }
     }
 
-    private void fillBasicConfig(Config config) {
-        config.setProjectFolder(projectFolderBtn.getText());
-        config.setModelPackage(modelPackageField.getText());
-        config.setModelTargetFolder(modelFolderBtn.getText());
-        config.setMapperPackage(daoPackageField.getText());
-        config.setMapperTargetFolder(daoFolderBtn.getText());
-        config.setXmlTargetFolder(xmlFolderBtn.getText());
-        config.setAuthor(authorField.getText());
+    private Config generateConfig() {
+        Config generatedConfig = new Config();
+
+        generatedConfig.setName(TABLE_NAME_FIELD.getText());
+        generatedConfig.setAuthor(AUTHOR_FIELD.getText());
+        generatedConfig.setTableName(TABLE_NAME_FIELD.getText());
+        generatedConfig.setPrimaryKey(PRIMARY_KEY_FIELD.getText());
+
+        generatedConfig.setModelName(MODEL_NAME_FIELD.getText());
+        generatedConfig.setMapperName(MAPPER_NAME_FIELD.getText());
+
+        String mapper = generatedConfig.getMapperName();
+        String modelName = generatedConfig.getModelName();
+        String mapperPostfix = mapper.replace(modelName, "");
+        generatedConfig.setMapperPostfix(mapperPostfix);
+
+        generatedConfig.setModelPackage(MODEL_PACKAGE_FIELD.getText());
+        generatedConfig.setMapperPackage(MAPPER_PACKAGE_FIELD.getText());
+
+        generatedConfig.setModelPath(MODEL_PATH_FIELD.getText());
+        generatedConfig.setMapperPath(MAPPER_PATH_FIELD.getText());
+        generatedConfig.setXmlPath(XML_PATH_FIELD.getText());
+
+        generatedConfig.setProjectFolder(PROJECT_FOLDER_BTN.getText());
+        generatedConfig.setModelTargetFolder(MODEL_FOLDER_BTN.getText());
+        generatedConfig.setMapperTargetFolder(MAPPER_FOLDER_BTN.getText());
+        generatedConfig.setXmlTargetFolder(XML_FOLDER_BTN.getText());
+
+        generatedConfig.setFeatureMap(config.getFeatureMap());
+
+        return generatedConfig;
     }
 
-    private void fillOtherConfig(Config config) {
-        config.setModelPath(modelPathField.getText());
-        config.setMapperPath(mapperPathField.getText());
-        config.setXmlPath(xmlPathField.getText());
-    }
-
-
-    private void onCancel() {
+    private void onClose() {
         dispose();
     }
 }
