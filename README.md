@@ -2,7 +2,7 @@ Mybatis Generator Plugin (IDEA Plugin)
 ====
 
 本插件基于<a href="https://github.com/kmaster/better-mybatis-generator"> better-mybatis-generator </a>二次开发而成. 
-在原有功能的基础上增加了对批量插入, JavaDoc注释, @Mapper注解, 方法命名 等做了改造, 使之符合团队的规范要求.
+在原有功能的基础上增加了对 `批量插入`, `JavaDoc注释`, `@Mapper注解`, `简洁方法命名` 等的支持, 使之符合团队的规范要求.
 
 改造点:
 ------
