@@ -57,3 +57,17 @@ Mybatis Generator Plugin (IDEA Plugin)
 
 加入新 Feature 时, 需要在 ExtendFeatureEnum 中定义新的枚举项, 并在 Generate.addPluginConfiguration 方法中
 定义并引入对应的插件类即可.
+
+
+* 常见问题
+
+导入工程后, 并尝试启动插件时, 可能会遇到如下问题: 
+
+![](image/problem.png)
+
+这是因为创建工程的默认类型不正确导致的, 
+手动将 .idea/mybatis-generator-plugin.xml 中 `module` 的 `type` 属性修从 "JAVA_MODULE" 改为 "PLUGIN_MODULE" 
+即可解决问题.
+
+![](image/fix.png)
+
