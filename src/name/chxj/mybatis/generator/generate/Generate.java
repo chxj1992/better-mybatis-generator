@@ -48,7 +48,7 @@ public class Generate {
     /**
      * 持久化的配置
      */
-    private PersistentService persistentConfig;
+    private PersistentService persistentService;
 
     /**
      * 界面默认配置
@@ -85,10 +85,10 @@ public class Generate {
     public void execute(AnActionEvent anActionEvent) throws Exception {
         this.anActionEvent = anActionEvent;
         this.project = anActionEvent.getData(PlatformDataKeys.PROJECT);
-        this.persistentConfig = PersistentService.getInstance(project);
+        this.persistentService = PersistentService.getInstance(project);
 
         //执行前 先保存一份当前配置
-        persistentConfig.getHistoryConfigMap().put(config.getName(), config);
+        persistentService.getHistoryConfigMap().put(config.getName(), config);
 
         PsiElement[] psiElements = anActionEvent.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
 
@@ -228,7 +228,7 @@ public class Generate {
         jdbcConfig.addProperty("nullCatalogMeansCurrent", "true");
         jdbcConfig.addProperty("useInformationSchema", "true");
 
-        Map<String, User> users = persistentConfig.getUsers();
+        Map<String, User> users = persistentService.getUsers();
         if (users != null && users.containsKey(url)) {
             User user = users.get(url);
 
@@ -483,6 +483,14 @@ public class Generate {
             JavaTypeResolverConfiguration javaTypeResolverPlugin = new JavaTypeResolverConfiguration();
             javaTypeResolverPlugin.setConfigurationType("cn.kt.JavaTypeResolverJsr310Impl");
             context.setJavaTypeResolverConfiguration(javaTypeResolverPlugin);
+        }
+
+        // Mapper 使用基本类型参数
+        if (config.isSelected(ExtendFeatureEnum.USE_PRIMITIVE_TYPE_MAPPER)) {
+            PluginConfiguration primitiveTypeMapperPlugin = new PluginConfiguration();
+            primitiveTypeMapperPlugin.addProperty("type", "cn.kt.PrimitiveTypeMapperPlugin");
+            primitiveTypeMapperPlugin.setConfigurationType("cn.kt.PrimitiveTypeMapperPlugin");
+            context.addPluginConfiguration(primitiveTypeMapperPlugin);
         }
 
         // SelectForUpdate 支持

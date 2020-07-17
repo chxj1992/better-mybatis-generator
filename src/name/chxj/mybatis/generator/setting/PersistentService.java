@@ -10,6 +10,8 @@ import name.chxj.mybatis.generator.model.Config;
 import name.chxj.mybatis.generator.model.TableInfo;
 import name.chxj.mybatis.generator.model.User;
 import name.chxj.mybatis.generator.util.StringUtils;
+
+import org.apache.commons.lang3.SerializationUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,8 +47,8 @@ public class PersistentService implements PersistentStateComponent<PersistentSer
     }
 
     @Override
-    public void loadState(@NotNull PersistentService persistentConfig) {
-        XmlSerializerUtil.copyBean(persistentConfig, this);
+    public void loadState(@NotNull PersistentService persistentService) {
+        XmlSerializerUtil.copyBean(persistentService, this);
     }
 
 
@@ -68,14 +70,22 @@ public class PersistentService implements PersistentStateComponent<PersistentSer
             initConfig.setMapperPath(DEFAULT_JAVA_PATH);
             initConfig.setXmlPath(DEFAULT_XML_PATH);
         }
+
+        Config config = SerializationUtils.clone(initConfig);
+
         if (tableInfo != null) {
-            initConfig.setTableName(tableInfo.getTableName());
-            initConfig.setModelName(StringUtils.dbStringToCamelStyle(tableInfo.getTableName()));
-            initConfig.setMapperName(initConfig.getModelName() + DEFAULT_MAPPER_POSTFIX);
+            config.setTableName(tableInfo.getTableName());
+            config.setModelName(StringUtils.dbStringToCamelStyle(tableInfo.getTableName()));
+            config.setMapperName(config.getModelName() + DEFAULT_MAPPER_POSTFIX);
             if (tableInfo.getPrimaryKeys().size() > 0) {
-                initConfig.setPrimaryKey(tableInfo.getPrimaryKeys().get(0));
+                config.setPrimaryKey(tableInfo.getPrimaryKeys().get(0));
             }
         }
+
+        return config;
+    }
+
+    public Config getInitConfig() {
         return initConfig;
     }
 
@@ -96,6 +106,10 @@ public class PersistentService implements PersistentStateComponent<PersistentSer
             historyConfigMap = new HashMap<>();
         }
         return historyConfigMap;
+    }
+
+    public void setHistoryConfigMap(Map<String, Config> historyConfigMap) {
+        this.historyConfigMap = historyConfigMap;
     }
 
 }

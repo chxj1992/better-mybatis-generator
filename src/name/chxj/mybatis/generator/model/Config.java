@@ -2,6 +2,7 @@ package name.chxj.mybatis.generator.model;
 
 import name.chxj.mybatis.generator.constant.ExtendFeatureEnum;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,8 @@ import java.util.Map;
  *
  * @author chenxiaojing
  */
-public class Config {
+public class Config implements Serializable {
+
 
     /**
      * 配置名称

@@ -39,7 +39,7 @@ public class MainUI extends JFrame implements Configurable {
     public MainUI(AnActionEvent anActionEvent) throws HeadlessException {
         this.anActionEvent = anActionEvent;
         this.project = anActionEvent.getData(PlatformDataKeys.PROJECT);
-        PersistentService persistentConfig = PersistentService.getInstance(project);
+        PersistentService persistentService = PersistentService.getInstance(project);
         this.psiElements = anActionEvent.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
 
         setTitle("Mybatis Generator");
@@ -55,13 +55,13 @@ public class MainUI extends JFrame implements Configurable {
         TableInfo tableInfo = new TableInfo((DbTable) psiElement);
         String projectFolder = project.getBasePath();
 
-        Map<String, Config> historyConfigMap = persistentConfig.getHistoryConfigMap();
+        Map<String, Config> historyConfigMap = persistentService.getHistoryConfigMap();
 
         if (psiElements.length > 1) {
             //多表时，只使用默认配置
-            config = persistentConfig.getInitConfig(tableInfo, projectFolder);
+            config = persistentService.getInitConfig(tableInfo, projectFolder);
         } else {
-            config = historyConfigMap.getOrDefault(tableInfo.getTableName(), persistentConfig.getInitConfig(tableInfo, projectFolder));
+            config = historyConfigMap.getOrDefault(tableInfo.getTableName(), persistentService.getInitConfig(tableInfo, projectFolder));
         }
 
         JPanel contentPanel = new JBPanel<>();
