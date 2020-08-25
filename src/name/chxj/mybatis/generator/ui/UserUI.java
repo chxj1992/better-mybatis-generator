@@ -148,7 +148,12 @@ public class UserUI extends JFrame {
 
             } catch (Exception ex) {
                 Messages.showMessageDialog(project, "Failed to connect to " + dbTypeName + " " +
-                                "database, please check the username and password, or mysql is version 8?", "Test connection",
+                                "database, please check the username and password, or mysql is version 8? " +
+                                " address : " + address +
+                                " username : " + usernameField.getText() +
+                                " password : " + passwordField.getText() +
+                                " exception : " + ex.getMessage()
+                        , "Test Connection",
                         Messages.getInformationIcon());
 //                new UserUI(driverClass, address, anActionEvent, config);
                 return;
